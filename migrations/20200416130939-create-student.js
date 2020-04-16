@@ -13,14 +13,18 @@ module.exports = {
         references: {
           models: 'Parents',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
       ClassId: {
         type: Sequelize.INTEGER,
         references: {
           models: 'Class',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
       Name: {
         type: Sequelize.STRING

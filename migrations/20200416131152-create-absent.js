@@ -9,7 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       StudentId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+					model: 'Students',
+					key: 'id'
+				},
+				onDelete: 'cascade',
+				onUpdate: 'cascade'
       },
       absentDate: {
         type: Sequelize.DATE

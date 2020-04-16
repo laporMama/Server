@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   })
     .then(parent => {
       if (parent) {
-        if (parent.UserId === userId){ 
+        if (parent.UserId === userId) {
           next()
         } else {
           next({ status: 401, message: 'You Are Not Authorized' })

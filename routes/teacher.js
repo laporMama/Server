@@ -1,4 +1,4 @@
-const {Router} = require('express')
+const { Router } = require('express')
 
 Router.get('/class', res.send('ini kelas'))
 Router.get('/class/:id', res.send('ini list student di kelas'))

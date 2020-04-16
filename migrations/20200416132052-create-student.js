@@ -11,7 +11,7 @@ module.exports = {
       ParentId: {
         type: Sequelize.INTEGER,
         references: {
-          models: 'Parents',
+          model: 'Parents',
           key: 'id'
         },
         onDelete: 'cascade',
@@ -20,7 +20,7 @@ module.exports = {
       ClassId: {
         type: Sequelize.INTEGER,
         references: {
-          models: 'Class',
+          model: 'Classes',
           key: 'id'
         },
         onDelete: 'cascade',

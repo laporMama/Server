@@ -5,6 +5,7 @@ const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
 let token = ''
 let tokent = ''
+let createdParentId = 0;
 
 describe('Register section, only user who have role "admin" can do this action', () => {
   beforeAll(async done => {
@@ -50,7 +51,7 @@ describe('Register section, only user who have role "admin" can do this action',
   describe('Success response, will returning status code 201 and message Success create <username> as <role>', () => {
     // test('Register Teacher', done => {
     //   request(app)
-    //     .post('/register')
+    //     .post('/admin/register/student')
     //     .set('token', token)
     //     .send({
     //       name: 'teacher',
@@ -69,7 +70,7 @@ describe('Register section, only user who have role "admin" can do this action',
 
     test('Register Parent', done => {
       request(app)
-        .post('/register')
+        .post('/admin/register/parent')
         .set('token', token)
         .send({
           name: 'parent',
@@ -77,6 +78,26 @@ describe('Register section, only user who have role "admin" can do this action',
           password: '12345',
           role: 'parent',
           phoneNumber: '081234432180'
+        })
+        .end((err, { status, body }) => {
+          expect(err).toBeNull()
+          expect(status).toBe(201)
+          expect(body).toHaveProperty('createdParent', expect.any(Object))
+          expect(body.message).toBe('Success create parent as parent') // <= success create <username> as <role>
+
+          createdParentId = body.createdParent.id
+          done()
+        })
+    })
+
+    test('Register Student', done => {
+      request(app)
+        .post('/admin/register/student')
+        .set('token', token)
+        .send({
+          name: 'student',
+          ParentId: createdParentId,
+          ClassId: 1
         })
         .end((err, { status, body }) => {
           expect(err).toBeNull()

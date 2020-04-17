@@ -1,10 +1,8 @@
-const { User, Teacher, Parent } = require('../models');
+const { User, Teacher, Parent, Student } = require('../models');
 const helper = require('../helpers/helper');
 
 class UserController {
   static async registerParent (req, res, next) {
-    console.log(`controller masuk`);
-    console.log(req.body);
     try {
       const { name, email, password, phoneNumber } = req.body
 
@@ -16,17 +14,10 @@ class UserController {
         role: 'parent'
       })
 
-      if (createdParent) {
-        res.status(201).json({
-          message: 'Parent successfully created',
-          createdParent
-        })
-      } else {
-        throw {
-          status: 500,
-          message: 'Internal Server Error'
-        }
-      }
+      res.status(201).json({
+        message: 'Parent successfully created',
+        createdParent
+      })
     } catch (error) {
       next(error)
     }
@@ -54,28 +45,47 @@ class UserController {
       create student
       create course
   */
-  static async registerTeacher (req, res, next) {
-    try {
-      const { name, email, password, role, phoneNumber } = req.body
 
-      const created = await User.create({
-        name, email, password, role, phoneNumber
+  static async registerStudent (req, res, next) {
+    console.log(`controller masuk`);
+    try {
+      const { name, ClassId, ParentId } = req.body;
+
+      const student = await Student.create({
+        name, ClassId, ParentId
       })
 
-      if (created) {
-          const createdStudent = Student.create({
-
-          })
-      } else {
-        throw {
-          status: 500,
-          message: 'Internal Server Error'
-        }
-      }
+      res.status(201).json({
+        message: 'Student successfully created',
+        createdStudent: student
+      })
     } catch (error) {
       next(error)
     }
   }
+
+  // static async registerTeacher (req, res, next) {
+  //   try {
+  //     const { name, email, password, role, phoneNumber } = req.body
+
+  //     const created = await User.create({
+  //       name, email, password, role, phoneNumber
+  //     })
+
+  //     if (created) {
+  //         const createdStudent = Student.create({
+            
+  //         })
+  //     } else {
+  //       throw {
+  //         status: 500,
+  //         message: 'Internal Server Error'
+  //       }
+  //     }
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
 
   static async login (req, res, next) {
     try {

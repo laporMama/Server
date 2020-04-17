@@ -6,7 +6,7 @@ module.exports = {
     return queryInterface.bulkInsert('Users', [{
       name: 'teacher',
       email: 'teacher@mail.com',
-      password: hashPassword(process.env.DEFAULT_PASS),
+      password: hashPassword('qweqwe'),
       role: 'teacher',
       phoneNumber: '081234432180',
       createdAt: new Date(),
@@ -14,7 +14,7 @@ module.exports = {
     }, {
       name: 'parent',
       email: 'parent@mail.com',
-      password: hashPassword(process.env.DEFAULT_PASS),
+      password: hashPassword('qweqwe'),
       role: 'parent',
       phoneNumber: '081234432180',
       createdAt: new Date(),
@@ -22,7 +22,7 @@ module.exports = {
     }, {
       name: 'admin',
       email: 'admin@mail.com',
-      password: hashPassword(process.env.DEFAULT_PASS),
+      password: hashPassword('qweqwe'),
       role: 'admin',
       phoneNumber: '081234432180',
       createdAt: new Date(),

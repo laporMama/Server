@@ -1,12 +1,15 @@
 const router = require('express').Router();
 const UserController = require('../controllers/user');
 const ParentController = require('../controllers/parent');
+const StudentController = require('../controllers/student');
 const { AdminAuthorization } = require('../middlewares/authorization');
 
 router.use(AdminAuthorization);
-router.post('/register/parents', UserController.registerParent);
-router.get('/parents/', ParentController.getAll);
-// router.post('/register/student', UserController.register);
+router.post('/register/parent', UserController.registerParent);
+router.post('/register/student', UserController.registerStudent);
+
+router.get('/students', StudentController.getAll);
+router.get('/parents', ParentController.getAll);
 // router.post('/register/teacher', UserController.register);
 
 module.exports = router;

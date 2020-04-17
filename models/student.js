@@ -3,7 +3,13 @@ module.exports = (sequelize, DataTypes) => {
   class Student extends sequelize.Sequelize.Model {}
 
   Student.init({
-    Name: DataTypes.STRING,
+    Name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        args: true
+      }
+    },
     ClassId: DataTypes.INTEGER,
     ParentId: DataTypes.INTEGER
   }, {

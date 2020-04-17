@@ -3,16 +3,17 @@ module.exports = (sequelize, DataTypes) => {
   class Teacher extends sequelize.Sequelize.Model {}
 
   Teacher.init({
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
+    UserId: DataTypes.INTEGER,
+    CourseId: DataTypes.INTEGER
   }, {
     sequelize
-  })
+  });
 
   Teacher.associate = function(models) {
     // associations can be defined here
-    Teacher.hasMany(models.TeacherSubject)
+    Teacher.belongsTo(models.User);
+    Teacher.belongsTo(models.Course);
   };
+  
   return Teacher;
 };

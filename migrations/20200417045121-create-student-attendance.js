@@ -1,30 +1,33 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('TeacherSubjects', {
+    return queryInterface.createTable('StudentAttendances', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      SubjectId: {
-        type: Sequelize.INTEGER,
-        references: {
-					model: 'Subjects',
-					key: 'id'
-				},
-				onDelete: 'cascade',
-				onUpdate: 'cascade'
+      status: {
+        type: Sequelize.STRING
       },
-      TeacherId: {
+      StudentId: {
         type: Sequelize.INTEGER,
         references: {
-					model: 'Teachers',
-					key: 'id'
-				},
-				onDelete: 'cascade',
-				onUpdate: 'cascade'
+          model: 'Students',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
+      },
+      AttendanceId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Attendances',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('TeacherSubjects');
+    return queryInterface.dropTable('StudentAttendances');
   }
 };

@@ -1,9 +1,10 @@
-const {Router} = require('express')
+const router = require('express').Router();
+const TeacherController = require('../controllers/teacher');
 
-Router.get('/class', res.send('ini kelas'))
-Router.get('/class/:id', res.send('ini list student di kelas'))
-Router.post('/class/:id/:studentId', res.send)
-Router.get('/class/:id/:subjectId/:studentId', res.send('ini lihat nilai siswa'))
-Router.post('/class/:id/:subjectId/:studentId', res.send('ini post nilai siswa'))
+router.get('/', TeacherController.getAllClass);
+router.get('/:id', TeacherController.getAllStudentByClassId);
+router.post('/:id/:studentId', TeacherController.setAttendance);
+router.get('/:id/:subjectId/:studentId', TeacherController.getStudentScore);
+router.post('/:id/:subjectId/:studentId', TeacherController.setStudentScore);
 
-module.exports = Router
+module.exports = router;

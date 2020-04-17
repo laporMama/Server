@@ -1,18 +1,18 @@
 {
   "development": {
     "username": "postgres",
-    "password": "Password1!",
+    "password": "",
     "database": "LaporMama",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
-    "password": "Password1!",
+    "password": "",
     "database": "LaporMamaTesting",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "logging": false
+	
   },
   "production": {
     "username": "root",

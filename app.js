@@ -3,7 +3,8 @@ const env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
 	require('dotenv').config({ path: process.cwd() + '/.env' });
 } else if (env === 'test') {
-	require('dotenv').config({ path: process.cwd() + '/.env.test' });
+	// require('dotenv').config({ path: process.cwd() + '/.env.test' });
+	require('dotenv').config({ path: process.cwd() + '/.env' }); // biar satu env aja ^^
 }
 
 const express = require('express');
@@ -12,6 +13,7 @@ const morgan = require('morgan');
 
 const app = express();
 const router = require('./routes');
+const errorHandler = require('./middlewares/errorHandler.js');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -19,5 +21,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(router);
+app.use(errorHandler);
 
-app.listen(process.env.PORT, () => console.log(`server is running on port ${process.env.PORT}`));
+module.exports = app;

@@ -3,9 +3,30 @@ module.exports = (sequelize, DataTypes) => {
   class StudentAttendance extends sequelize.Sequelize.Model {}
 
   StudentAttendance.init({
-    status: DataTypes.STRING,
-    StudentId: DataTypes.INTEGER,
-    AttendanceId: DataTypes.INTEGER
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { args: true, msg: 'Status Cannot Null' },
+        notEmpty: { args: true, msg: 'Status Cannot Empty' }
+      }
+    },
+    StudentId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { args: true, msg: 'Student Id Cannot Null' },
+        isInt: { args: true, msg: 'Invalid Student Id' }
+      }
+    },
+    AttendanceId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { args: true, msg: 'Attendance Id Cannot Null' },
+        isInt: { args: true, msg: 'Invalid Attendance Id' }
+      }
+    }
   }, {
     sequelize
   });

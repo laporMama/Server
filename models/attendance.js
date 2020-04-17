@@ -3,7 +3,13 @@ module.exports = (sequelize, DataTypes) => {
   class Attendance extends sequelize.Sequelize.Model {}
 
   Attendance.init({
-    attendanceDate: DataTypes.DATE
+    attendanceDate: {
+      type : DataTypes.DATE,
+      allowNull : false,
+      validate : {
+        notNull: { args: true, msg: 'Date Cannot Null' }
+      }
+    }
   }, {
     sequelize
   });

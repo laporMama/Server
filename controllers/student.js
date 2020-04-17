@@ -22,7 +22,7 @@ class StudentController {
   }
 
   static async getByClassId (req, res, next) {
-    const { ClassId } = req.body;
+    const { ClassId } = req.params;
 
     const students = await Student.findAll({
       where: { ClassId }

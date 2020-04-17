@@ -26,15 +26,14 @@ describe('Register section, only user who have role "admin" can do this action',
 
     await User.create(admin)
 
-    request(app)
+    const res = await request(app)
       .post('/login')
       .send({
         email: 'admin@mail.com',
         password: '12345'
       })
-      .end((err, res) => {
-        token = res.body.token
-      })
+        
+    token = res.body.token
 
     // const dataAdmin = await User.create(admin)
     // const dataDummy = await User.create(dummy)
@@ -49,24 +48,24 @@ describe('Register section, only user who have role "admin" can do this action',
   })
 
   describe('Success response, will returning status code 201 and message Success create <username> as <role>', () => {
-    // test('Register Teacher', done => {
-    //   request(app)
-    //     .post('/admin/register/student')
-    //     .set('token', token)
-    //     .send({
-    //       name: 'teacher',
-    //       email: 'teacher@mail.com',
-    //       password: '12345',
-    //       role: 'teacher',
-    //       phoneNumber: '081234432180'
-    //     })
-    //     .end((err, { status, body }) => {
-    //       expect(err).toBeNull()
-    //       expect(status).toBe(201)
-    //       expect(body.message).toBe('Success create teacher as teacher') // <= success create <username> as <role>
-    //       done()
-    //     })
-    // })
+    test('Register Teacher', done => {
+      request(app)
+        .post('/admin/register/student')
+        .set('token', token)
+        .send({
+          name: 'teacher',
+          email: 'teacher@mail.com',
+          password: '12345',
+          role: 'teacher',
+          phoneNumber: '081234432180'
+        })
+        .end((err, { status, body }) => {
+          expect(err).toBeNull()
+          expect(status).toBe(201)
+          expect(body.message).toBe('Success create teacher as teacher') // <= success create <username> as <role>
+          done()
+        })
+    })
 
     test('Register Parent', done => {
       request(app)
@@ -102,7 +101,7 @@ describe('Register section, only user who have role "admin" can do this action',
         .end((err, { status, body }) => {
           expect(err).toBeNull()
           expect(status).toBe(201)
-          expect(body.message).toBe('Success create parent as parent') // <= success create <username> as <role>
+          expect(body.message).toBe('Success create parent as student') // <= success create <username> as <role>
           done()
         })
     })

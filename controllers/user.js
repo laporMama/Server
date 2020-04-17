@@ -23,29 +23,6 @@ class UserController {
     }
   }
 
-  /*
-      user / parent
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      role: DataTypes.STRING,
-      phoneNumber: DataTypes.STRING
-
-      student
-      name: DataTypes.STRING,
-      ClassId: DataTypes.INTEGER,
-      ParentId: DataTypes.INTEGER
-
-      teacher
-      UserId: DataTypes.INTEGER,
-      CourseId: DataTypes.INTEGER
-
-      create teacher
-      create parent
-      create student
-      create course
-  */
-
   static async registerStudent (req, res, next) {
     console.log(`controller masuk`);
     try {
@@ -64,28 +41,32 @@ class UserController {
     }
   }
 
-  // static async registerTeacher (req, res, next) {
-  //   try {
-  //     const { name, email, password, role, phoneNumber } = req.body
+  static async registerTeacher (req, res, next) {
+    try {
+      const { name, email, password, role, phoneNumber, CourseId } = req.body
 
-  //     const created = await User.create({
-  //       name, email, password, role, phoneNumber
-  //     })
+      const createdUser = await User.create({
+        name,
+        email,
+        password,
+        phoneNumber,
+        role: 'teacher'
+      })
 
-  //     if (created) {
-  //         const createdStudent = Student.create({
-            
-  //         })
-  //     } else {
-  //       throw {
-  //         status: 500,
-  //         message: 'Internal Server Error'
-  //       }
-  //     }
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
+      const createdTeacher = await Teacher.create({
+        UserId: createdUser.id,
+        CourseId
+      })
+
+      res.status(201).json({
+        message: 'Teacher successfully created',
+        createdTeacher,
+        createdUser
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 
   static async login (req, res, next) {
     try {

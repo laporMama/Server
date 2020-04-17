@@ -25,14 +25,6 @@ class TeacherController {
 		})
 	}
 
-	static getAllClass (req, res, next) {
-		res.send('list kelas');
-	}
-
-	static getAllStudentByClassId (req, res, next) {
-		res.send('list student berdasarkan kelas');
-	}
-
 	static setAttendance (req, res, next) {
 		res.send('absensi siswa');
 	}

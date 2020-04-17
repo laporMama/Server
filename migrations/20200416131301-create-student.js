@@ -15,7 +15,8 @@ module.exports = {
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade'
+        onUpdate: 'cascade',
+        allowNull: false
       },
       ClassId: {
         type: Sequelize.INTEGER,
@@ -24,10 +25,12 @@ module.exports = {
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade'
+        onUpdate: 'cascade',
+        allowNull: false
       },
-      name: {
-        type: Sequelize.STRING
+      Name: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

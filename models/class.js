@@ -3,7 +3,15 @@ module.exports = (sequelize, DataTypes) => {
   class Class extends sequelize.Sequelize.Model{}
 
   Class.init({
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true
+        }
+      }
+    }
   }, {
     sequelize
   })

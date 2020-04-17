@@ -15,7 +15,8 @@ module.exports = {
 					key: 'id'
 				},
 				onDelete: 'cascade',
-				onUpdate: 'cascade'
+				onUpdate: 'cascade',
+        allowNull: false
       },
       StudentId: {
         type: Sequelize.INTEGER,
@@ -24,16 +25,20 @@ module.exports = {
 					key: 'id'
 				},
 				onDelete: 'cascade',
-				onUpdate: 'cascade'
+				onUpdate: 'cascade',
+        allowNull: false
       },
       score: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       reportDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       type: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

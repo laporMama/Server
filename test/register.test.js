@@ -3,6 +3,7 @@ const axios = require('')
 const app = require('../app.js')
 const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
+const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
 let createdParentId = 0;
@@ -23,22 +24,17 @@ describe('Register section, only user who have role "admin" can do this action',
       role: 'admin',
       phoneNumber: '081234432180'
     }
-
-    await User.create(admin)
-
-    const res = await request(app)
-      .post('/login')
-      .send({
-        email: 'admin@mail.com',
-        password: '12345'
-      })
-        
-    token = res.body.token
-
-    // const dataAdmin = await User.create(admin)
-    // const dataDummy = await User.create(dummy)
-    // token = dataAdmin.token
-    // tokent = dataDummy.token
+    const dataAdmin = await User.create(admin)
+    const dataDummy = await User.create(dummy)
+    token = generateToken({
+      id: dataAdmin.data.id,
+      email: dataAdmin.data.email,
+      role: 'admin'
+    })
+    tokent = generateToken({
+      id: dataDummy.data.id,
+      email: dataDummy.data.email
+    })
     done()
   })
 

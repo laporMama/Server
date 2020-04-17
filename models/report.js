@@ -3,11 +3,57 @@ module.exports = (sequelize, DataTypes) => {
   class Report extends sequelize.Sequelize.Model {}
 
   Report.init({
-    score: DataTypes.INTEGER,
-    reportDate: DataTypes.DATE,
-    type: DataTypes.STRING,
-    StudentId: DataTypes.INTEGER,
-    CourseId: DataTypes.INTEGER
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        max: {
+          args: 100
+        },
+        min: {
+          args: 0
+        }
+      }
+    },
+    reportDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      valdiate: {
+        notNull: {
+          args: true
+        },
+        isAfter: {
+          args: `${new Date().toDateString()}`
+        }
+      }
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull:false,
+      valdiate: {
+        notNull: {
+          args: true
+        }
+      }
+    },
+    StudentId:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true
+        }
+      }
+    },
+    CourseId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true
+        }
+      }
+    }
   }, {
     sequelize
   });

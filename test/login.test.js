@@ -3,7 +3,7 @@ const app = require('../app.js')
 const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
 
-describe('Login test section', _ => {
+describe('Login test section', () => {
   beforeAll(async done => {
     const teacher = {
       username: 'teacher',
@@ -26,17 +26,17 @@ describe('Login test section', _ => {
       role: 'admin',
       phoneNumber: '081234432180'
     }
-    const _ = await User.create(teacher)
-    const _ = await User.create(parent)
-    const _ = await User.create(admin)
+    await User.create(teacher)
+    await User.create(parent)
+    await User.create(admin)
     done()
   })
   afterAll(async done => {
-    const _ = await queryInterface.bulkDelete('Users', null, {})
+    await queryInterface.bulkDelete('Users', null, {})
     done()
   })
   
-  describe('success response, will returning status code 200, token and message', _ => {
+  describe('success response, will returning status code 200, token and message', () => {
     test('Teachers login', (done) => {
       request(app)
         .post('/login')
@@ -83,7 +83,7 @@ describe('Login test section', _ => {
         })
     })
   })
-  describe('Error response', _ => {
+  describe('Error response', () => {
     test('Because email is invalid', done => {
       request(app)
         .post('/login')

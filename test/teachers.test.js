@@ -2,6 +2,7 @@ const request = require('supertest')
 const app = require('../app.js')
 const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
+const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
 
@@ -31,8 +32,14 @@ describe('Create teachers section, only user who have role "admin" can do this a
     const dataAdmin = await User.create(admin)
     const dataDummy = await User.create(dummy)
     await User.create(parent)
-    token = dataAdmin.token
-    tokent = dataDummy.token
+    token = generateToken({
+      id: dataAdmin.data.id,
+      email: dataAdmin.data.email
+    })
+    tokent = generateToken({
+      id: dataDummy.data.id,
+      email: dataDummy.data.email
+    })
     done()
   })
   afterAll(async done => {

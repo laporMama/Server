@@ -30,12 +30,10 @@ describe('Login test section', () => {
     await User.create(teacher)
     await User.create(parent)
     await User.create(admin)
-
     done()
   })
   afterAll(async done => {
     await queryInterface.bulkDelete('Users', null, {})
-    
     done()
   })
   

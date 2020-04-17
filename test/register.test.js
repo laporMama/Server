@@ -29,7 +29,7 @@ describe('Register section, only user who have role "admin" can do this action',
   })
 
   afterAll(async done => {
-    const _ = await queryInterface.bulkDelete('Users', null, {})
+    await queryInterface.bulkDelete('Users', null, {})
     done()
   })
 
@@ -73,7 +73,7 @@ describe('Register section, only user who have role "admin" can do this action',
         })
     })
   })
-
+  
   describe('Error response', () => {
     test("Because role isn't admin", done => {
       request(app)

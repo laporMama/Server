@@ -19,16 +19,16 @@ describe('Login test section', _ => {
       role: 'parent',
       phoneNumber: '081234432180'
     }
-    const superAdmin = {
-      username: 'superAdmin',
-      email: 'superAdmin@mail.com',
+    const admin = {
+      username: 'admin',
+      email: 'admin@mail.com',
       password: '12345',
-      role: 'superAdmin',
+      role: 'admin',
       phoneNumber: '081234432180'
     }
     const _ = await User.create(teacher)
     const _ = await User.create(parent)
-    const _ = await User.create(superAdmin)
+    const _ = await User.create(admin)
     done()
   })
   afterAll(async done => {
@@ -63,28 +63,28 @@ describe('Login test section', _ => {
           expect(err).toBeNull()
           expect(status).toBe(200)
           expect(body).toHaveProperty('token')
-          expect(body.message).toBe('Success login as parent')
+          expect(body.message).toBe('Success login as parent') // parent name
           done()
         })
     })
-    test('SuperAdmin Login', (done) => {
+    test('Admin Login', (done) => {
       request(app)
         .post('/login')
         .send({
-          email: 'superAdmin@mail.com',
+          email: 'admin@mail.com',
           password: '12345'
         })
         .end((err, { status, body }) => {
           expect(err).toBeNull()
           expect(status).toBe(200)
           expect(body).toHaveProperty('token')
-          expect(body.message).toBe('Success login as superAdmin')
+          expect(body.message).toBe('Success login as admin') // admin name
           done()
         })
     })
   })
   describe('Error response', _ => {
-    test('Because email invalid', done => {
+    test('Because email is invalid', done => {
       request(app)
         .post('/login')
         .send({

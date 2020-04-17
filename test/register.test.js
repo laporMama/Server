@@ -160,42 +160,42 @@ describe('Register section, only user who have role "admin" can do this action',
           expect(body.message).toBe('Email must contain email format')
           done()
         })
-      test("Because role empty", done => {
-        request(app)
-          .post('/register')
-          .set('token', token)
-          .send({
-            name: 'teacher',
-            email: 'teacher2@mail.com',
-            password: '12345',
-            role: '', // use validation len[1] etc
-            phoneNumber: '081234432180'
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(400)
-            expect(body.message).toBe('Role cannot be empty')
-            done()
-          })
-      })
-      test("Because phoneNumber less than 9 character", done => {
-        request(app)
-          .post('/register')
-          .set('token', token)
-          .send({
-            name: 'teacher',
-            email: 'teacher2@mail.com',
-            password: '12345',
-            role: 'teacher',
-            phoneNumber: '08123443' // use validation len[9] etc
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(400)
-            expect(body.message).toBe('Phone number cannot less than 9 character')
-            done()
-          })
-      })
+    test("Because role empty", done => {
+      request(app)
+        .post('/register')
+        .set('token', token)
+        .send({
+          name: 'teacher',
+          email: 'teacher2@mail.com',
+          password: '12345',
+          role: '', // use validation len[1] etc
+          phoneNumber: '081234432180'
+        })
+        .end((err, { status, body }) => {
+          expect(err).toBeNull()
+          expect(status).toBe(400)
+          expect(body.message).toBe('Role cannot be empty')
+          done()
+        })
+    })
+    test("Because phoneNumber less than 9 character", done => {
+      request(app)
+        .post('/register')
+        .set('token', token)
+        .send({
+          name: 'teacher',
+          email: 'teacher2@mail.com',
+          password: '12345',
+          role: 'teacher',
+          phoneNumber: '08123443' // use validation len[9] etc
+        })
+        .end((err, { status, body }) => {
+          expect(err).toBeNull()
+          expect(status).toBe(400)
+          expect(body.message).toBe('Phone number cannot less than 9 character')
+          done()
+        })
+    })
     })
   })
 })

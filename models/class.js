@@ -4,10 +4,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Class.init({
     name: {
-      type : DataTypes.STRING,
-      allowNull : false,
-      validate : {
-        notNull: { args: true, msg: 'Class Name Cannot Null' }
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true
+        }
       }
     }
   }, {

@@ -4,10 +4,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Attendance.init({
     attendanceDate: {
-      type : DataTypes.DATE,
-      allowNull : false,
-      validate : {
-        notNull: { args: true, msg: 'Date Cannot Null' }
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true
+        },
+        isAfter: {
+          args: `${new Date().toDateString()}`
+        }
       }
     }
   }, {

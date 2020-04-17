@@ -5,44 +5,55 @@ module.exports = (sequelize, DataTypes) => {
   Report.init({
     score: {
       type: DataTypes.INTEGER,
-      allowNull : false, 
+      allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Score Cannot Null' },
-        min: { args: '0', msg: 'Score Cannot Negative' },
-        max : { args: '100', msg: 'Score Cannot Over 100' }
+        max: {
+          args: 100
+        },
+        min: {
+          args: 0
+        }
       }
     },
     reportDate: {
-      type : DataTypes.DATE,
-      allowNull : false,
-      validate : {
-        notNull: { args: true, msg: 'Date Cannot Null' }
+      type: DataTypes.DATE,
+      allowNull: false,
+      valdiate: {
+        notNull: {
+          args: true
+        },
+        isAfter: {
+          args: `${new Date().toDateString()}`
+        }
       }
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { args: true, msg: 'Type Cannot Null' },
-        notEmpty: { args: true, msg: 'Type Cannot Empty' },
+      allowNull:false,
+      valdiate: {
+        notNull: {
+          args: true
+        }
       }
     },
-    StudentId: {
+    StudentId:{
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Student Id Cannot Null' },
-        isInt: { args: true, msg: 'Invalid Student Id' }
+        notNull: {
+          args: true
+        }
       }
     },
     CourseId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Course Id Cannot Null' },
-        isInt: { args: true, msg: 'Invalid Course Id' }
+        notNull: {
+          args: true
+        }
       }
-    }  
+    }
   }, {
     sequelize
   });

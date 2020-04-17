@@ -4,35 +4,58 @@ module.exports = (sequelize, DataTypes) => {
   class User extends sequelize.Sequelize.Model {}
 
   User.init({
-    name: DataTypes.STRING,
-    email: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isEmail: { args: true, msg: 'Invalid Email Address' },
-        notNull: { args: true, msg: 'Email Cannot Null' }
+        notNull: {
+          args: true,
+          msg: 'Name cannot be empty'
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      isEmail: {
+        args: true,
+        msg: 'Email must contain email format'
+      },
+      notNull: {
+        args: true,
       }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Password Cannot Null' },
-        len: { args: [5, 20], msg: 'Password Length Should Be 5-20 Length' }
+        len: {
+          args: [5],
+          msg: 'Password length cannot less than 5 character'
+        },
+        notNull: {
+          args: true,
+        }
       }
     },
     role: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Role Cannot Null' }
-    }
-  },
-    phoneNumber: {
-      type : DataTypes.STRING,
-      allowNull : false,
-      validate : {
-        len: { args: [9, 13], msg: 'Phone Number Length Should Be 9-13 Length' }
+        notNull: {
+          args: true,
+          msg: 'Role cannot be empty'
+        }
+      }
+    },
+    phoneNumber:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        len: {
+          args:  [9],
+          msg: 'Phone number cannot less than 9 character'
+        }
       }
     }
   }, {

@@ -1,12 +1,12 @@
 {
-  "name": "Server",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development nodemon bin/www/http.js",
-    "start": "node app.js"
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles --coverage",
+    "dev": "NODE_ENV=development nodemon ./bin/http.js",
+    "start": "node ./bin/http.js"
   },
   "repository": {
     "type": "git",

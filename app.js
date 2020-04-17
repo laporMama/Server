@@ -3,7 +3,8 @@ const env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
 	require('dotenv').config({ path: process.cwd() + '/.env' });
 } else if (env === 'test') {
-	require('dotenv').config({ path: process.cwd() + '/.env.test' });
+	// require('dotenv').config({ path: process.cwd() + '/.env.test' });
+	require('dotenv').config({ path: process.cwd() + '/.env' }); // biar satu env aja ^^
 }
 
 const express = require('express');

@@ -5,7 +5,7 @@ const { queryInterface } = sequelize
 let token = ''
 let tokent = ''
 
-describe('Register section, only user who have role "admin" can do this action', _ => {
+describe('Register section, only user who have role "admin" can do this action', () => {
   beforeAll(async done => {
     const dummy = {
       username: 'budi',
@@ -28,11 +28,11 @@ describe('Register section, only user who have role "admin" can do this action',
     done()
   })
   afterAll(async done => {
-    const _ = await queryInterface.bulkDelete('Users', null, {})
+    await queryInterface.bulkDelete('Users', null, {})
     done()
   })
 
-  describe('Success response, will returning status code 201 and message Success create <username> as <role>', _ => {
+  describe('Success response, will returning status code 201 and message Success create <username> as <role>', () => {
     test('Register Teacher', done => {
       request(app)
         .post('/register')
@@ -70,7 +70,7 @@ describe('Register section, only user who have role "admin" can do this action',
         })
     })
   })
-  describe('Error response', _ => {
+  describe('Error response', () => {
     test("Because role isn't admin", done => {
       request(app)
         .post('/register')

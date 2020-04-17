@@ -27,6 +27,7 @@ describe('Register section, only user who have role "admin" can do this action',
     tokent = dataDummy.token
     done()
   })
+
   afterAll(async done => {
     await queryInterface.bulkDelete('Users', null, {})
     done()
@@ -34,6 +35,7 @@ describe('Register section, only user who have role "admin" can do this action',
 
   describe('Success response, will returning status code 201 and message Success create <username> as <role>', () => {
     test('Register Teacher', done => {
+      console.log('token=', token);
       request(app)
         .post('/register')
         .set('token', token)
@@ -51,6 +53,7 @@ describe('Register section, only user who have role "admin" can do this action',
           done()
         })
     })
+
     test('Register Parent', done => {
       request(app)
         .post('/register')
@@ -70,6 +73,7 @@ describe('Register section, only user who have role "admin" can do this action',
         })
     })
   })
+  
   describe('Error response', () => {
     test("Because role isn't admin", done => {
       request(app)
@@ -89,6 +93,7 @@ describe('Register section, only user who have role "admin" can do this action',
           done()
         })
     })
+    
     test("Because user already exist", done => {
       request(app)
         .post('/register')
@@ -107,6 +112,7 @@ describe('Register section, only user who have role "admin" can do this action',
           done()
         })
     })
+
     test("Because password length less than 5 character", done => {
       request(app)
         .post('/register')
@@ -125,6 +131,7 @@ describe('Register section, only user who have role "admin" can do this action',
           done()
         })
     })
+
     test("Because name empty", done => {
       request(app)
         .post('/register')
@@ -143,6 +150,7 @@ describe('Register section, only user who have role "admin" can do this action',
           done()
         })
     })
+
     test("Because email doesn't contain email format", done => {
       request(app)
         .post('/register')
@@ -160,6 +168,8 @@ describe('Register section, only user who have role "admin" can do this action',
           expect(body.message).toBe('Email must contain email format')
           done()
         })
+    })
+
     test("Because role empty", done => {
       request(app)
         .post('/register')
@@ -178,6 +188,7 @@ describe('Register section, only user who have role "admin" can do this action',
           done()
         })
     })
+
     test("Because phoneNumber less than 9 character", done => {
       request(app)
         .post('/register')
@@ -195,7 +206,6 @@ describe('Register section, only user who have role "admin" can do this action',
           expect(body.message).toBe('Phone number cannot less than 9 character')
           done()
         })
-    })
     })
   })
 })

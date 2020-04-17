@@ -1,17 +1,15 @@
 const router = require('express').Router();
-const teacher = require('./teacher')
-const mama = require('./mama')
+const teacherRouter = require('./teacher');
+const parentRouter = require('./parent');
+const UserController = require('../controllers/user');
 
-// ? Main Routing
-router.get('/', res.send('hello'));
-router.post('login', res.send('login'))
-router.post('/register', res.send('register'))
+router.get('/', (req, res, next) => res.send('hello'));
+router.post('/login', UserController.login);
+router.post('/register', UserController.register);
 
-// ? Teacher Routing
-router.use(teacher)
+router.use('/class', teacherRouter);
 
-// ? Mama Routing
-router.use(mama)
+router.use('/parent', parentRouter);
 
 
 module.exports = router

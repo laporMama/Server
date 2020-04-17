@@ -2,25 +2,26 @@ const request = require('supertest')
 const app = require('../app.js')
 const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
+const { hashPassword } = require('../helpers/helper')
 
 describe('Login test section', () => {
   beforeAll(async done => {
     const teacher = {
-      username: 'teacher',
+      name: 'teacher',
       email: 'teacher@mail.com',
       password: '12345',
       role: 'teacher',
       phoneNumber: '081234432180'
     }
     const parent = {
-      username: 'parent',
+      name: 'parent',
       email: 'parent@mail.com',
       password: '12345',
       role: 'parent',
       phoneNumber: '081234432180'
     }
     const admin = {
-      username: 'admin',
+      name: 'admin',
       email: 'admin@mail.com',
       password: '12345',
       role: 'admin',
@@ -44,7 +45,8 @@ describe('Login test section', () => {
           email: 'teacher@mail.com',
           password: '12345'
         })
-        .end((err, { status, body }) => {
+        .end((err, { status, body, text }) => {
+          console.log(text);
           expect(err).toBeNull()
           expect(status).toBe(200)
           expect(body).toHaveProperty('token')

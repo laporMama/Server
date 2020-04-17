@@ -15,7 +15,8 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade'
+        onDelete: 'cascade',
+        allowNull: false
       },
       CourseId: {
         type: Sequelize.INTEGER,
@@ -24,7 +25,8 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade'
+        onDelete: 'cascade',
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

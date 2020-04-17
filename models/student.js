@@ -7,11 +7,26 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        args: true
+        notNull: { args: true, msg: 'Name Cannot Null' },
+        notEmpty: { args: true, msg: 'Name Cannot Empty' },
       }
     },
-    ClassId: DataTypes.INTEGER,
-    ParentId: DataTypes.INTEGER
+    ClassId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { args: true, msg: 'Product Id Cannot Null' },
+        isInt: { args: true, msg: 'Invalid Product Id' }
+      }
+    },
+    ParentId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: { args: true, msg: 'Product Id Cannot Null' },
+        isInt: { args: true, msg: 'Invalid Product Id' }
+      }
+    }
   }, {
     sequelize
   });

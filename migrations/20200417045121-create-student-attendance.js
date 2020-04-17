@@ -9,7 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       StudentId: {
         type: Sequelize.INTEGER,
@@ -18,7 +19,8 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade'
+        onDelete: 'cascade',
+        allowNull: false
       },
       AttendanceId: {
         type: Sequelize.INTEGER,
@@ -27,7 +29,8 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade'
+        onDelete: 'cascade',
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

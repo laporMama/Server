@@ -9,7 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       attendanceDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

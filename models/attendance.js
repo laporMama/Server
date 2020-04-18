@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
           args: true
         },
         isAfter: {
-          args: `${new Date().toDateString()}`
+          args: `${new Date().toDateString()}`,
+          msg: 'Attendance date cannot pass from today'
         }
       }
     }

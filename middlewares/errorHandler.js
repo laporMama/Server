@@ -2,6 +2,8 @@ module.exports = (err, req, res, next) => {
   let status = 500
   let message = 'Internal Server Error'
 
+  console.log(err, '<<<<<===!!!ERROR!!!===>>>>>')
+
   if (err.status) {
     status = err.status
     message = err.message

@@ -8,12 +8,33 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          args: true
+          args: true,
+          msg: 'Status cannot be empty'
+        },
+        len: {
+          args: [1],
+          msg: 'Status cannot be empty'
         }
       }
     },
-    StudentId: DataTypes.INTEGER,
-    AttendanceId: DataTypes.INTEGER
+    StudentId: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Student cannot be empty'
+        }
+      }
+    },
+    AttendanceId: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Date cannot be empty'
+        }
+      }
+    }
   }, {
     sequelize
   });

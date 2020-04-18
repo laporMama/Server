@@ -1,6 +1,5 @@
-const Helper = require('../helpers/helper')
-const { verify } = require('../helpers/helper')
 const { User } = require('../models')
+const { verify } = require('../helpers/helper.js')
 
 module.exports = (req, res, next) => {
   let { token } = req.headers;

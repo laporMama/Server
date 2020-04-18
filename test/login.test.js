@@ -2,10 +2,9 @@ const request = require('supertest')
 const app = require('../app.js')
 const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
-const { hashPassword } = require('../helpers/helper')
 
-describe('Login test section', () => {
-  beforeAll(async done => {
+describe.skip('Login test section', () => {
+  beforeAll(done => {
     const teacher = {
       name: 'teacher',
       email: 'teacher@mail.com',
@@ -27,14 +26,24 @@ describe('Login test section', () => {
       role: 'admin',
       phoneNumber: '081234432180'
     }
-    await User.create(teacher)
-    await User.create(parent)
-    await User.create(admin)
-    done()
+    User.create(teacher)
+      .then(() => {
+        return User.create(parent)
+      })
+      .then(() => {
+        return User.create(admin)
+      })
+      .then(() => {
+        done()
+      })
+      .catch(done)
   })
-  afterAll(async done => {
-    await queryInterface.bulkDelete('Users', null, {})
-    done()
+  afterAll(done => {
+    queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        done()
+      })
+      .catch(done)
   })
   
   describe('success response, will returning status code 200, token and message', () => {
@@ -45,12 +54,11 @@ describe('Login test section', () => {
           email: 'teacher@mail.com',
           password: '12345'
         })
-        .end((err, { status, body, text }) => {
-          console.log(text);
+        .end((err, { status, body }) => {
           expect(err).toBeNull()
           expect(status).toBe(200)
           expect(body).toHaveProperty('token')
-          expect(body.message).toBe('Success login as teacher') // teacher name
+          expect(body.message).toBe('Success login as teacher')
           done()
         })
     })
@@ -65,7 +73,7 @@ describe('Login test section', () => {
           expect(err).toBeNull()
           expect(status).toBe(200)
           expect(body).toHaveProperty('token')
-          expect(body.message).toBe('Success login as parent') // parent name
+          expect(body.message).toBe('Success login as parent')
           done()
         })
     })
@@ -80,7 +88,7 @@ describe('Login test section', () => {
           expect(err).toBeNull()
           expect(status).toBe(200)
           expect(body).toHaveProperty('token')
-          expect(body.message).toBe('Success login as admin') // admin name
+          expect(body.message).toBe('Success login as admin')
           done()
         })
     })

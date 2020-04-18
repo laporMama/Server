@@ -8,7 +8,6 @@ const UserController = require('../controllers/user');
 const ClassesController = require('../controllers/class');
 const CoursesController = require('../controllers/course');
 
-router.get('/', (req, res, next) => res.send('hello'));
 router.get('/courses', CoursesController.getAll);
 router.get('/classes', ClassesController.getAll);
 router.post('/login', UserController.login);

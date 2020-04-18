@@ -1,7 +1,7 @@
 const { Teacher } = require('../models');
 
-class TeacherController {
-	static async getAll (req, res, next) {
+module.exports = {
+	async getAll(req, res, next) {
 		const teachers = await User.findAll({
 			where: {
 				role: 'teacher'
@@ -11,31 +11,34 @@ class TeacherController {
 		res.status(200).json({
 			teachers
 		})
-	}
+	},
+	create(req, res, next) {
 
-	static async getById (req, res, next) {
-		const { id } = req.params;
+	},
+	update(req, res, next) {
 
-		const teacher = await User.findOne({
-			where: { id }
-		})
+	},
+	destroy(req, res, next) {
 
-		res.status(200).json({
-			teacher
-		})
 	}
+	// async getById(req, res, next) {
+	// 	const { id } = req.params;
 
-	static setAttendance (req, res, next) {
-		res.send('absensi siswa');
-	}
-	
-	static getStudentScore (req, res, next) {
-		res.send('ini lihat nilai siswa');
-	}
+	// 	const teacher = await User.findOne({
+	// 		where: { id }
+	// 	})
 
-	static setStudentScore (req, res, next) {
-		res.send('ini post nilai siswa');
-	}
+	// 	res.status(200).json({
+	// 		teacher
+	// 	})
+	// },
+	// setAttendance(req, res, next) {
+	// 	res.send('absensi siswa');
+	// },
+	// getStudentScore(req, res, next) {
+	// 	res.send('ini lihat nilai siswa');
+	// },
+	// setStudentScore(req, res, next) {
+	// 	res.send('ini post nilai siswa');
+	// },
 }
-
-module.exports = TeacherController;

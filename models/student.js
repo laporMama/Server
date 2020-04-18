@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     ClassId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         notNull: { args: true, msg: 'Class cannot be empty' },
         isInt: { args: true, msg: 'Class not found' }
@@ -24,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     ParentId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         notNull: { args: true, msg: 'Parent cannot be empty' },
         isInt: { args: true, msg: 'Parent not found' }

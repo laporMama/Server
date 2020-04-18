@@ -1,70 +1,84 @@
 const request = require('supertest')
 const app = require('../app.js')
-const { User, Student, Attendance, sequelize } = require('../models')
+const { User, Student, StudentAttendance, Attendances, sequelize } = require('../models')
 const { queryInterface } = sequelize
 const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
 let id = 0
+let attendanceId = null
+let StudentId = null
 
-describe('/attendances sections, only user who have role teacher can do this action', () => {
-  beforeAll(async done => {
-    try {
-      const teacher = {
-        username: 'teacher',
-        email: 'teacher@mail.com',
-        password: '12345',
-        role: 'teacher',
-        phoneNumber: '081234432180'
-      }
-      const dummy = {
-        username: 'parent',
-        email: 'parent@mail.com',
-        password: '12345',
-        role: 'parent',
-        phoneNumber: '081234432180'
-      }
-      const student = {
-        name: 'student',
-        class: 'IX 1',
-        parentEmail: 'parent@mail.com'
-      }
-      const student2 = {
-        name: 'student2',
-        class: 'IX 2',
-        parentEmail: 'parent@mail.com'
-      }
-      const attendance = {
-        student: 'student2',
-        status: 'sakit',
-        date: new Date()
-      }
-      const dataTeacher = await User.create(teacher)
-      const dataDummy = await User.create(dummy)
-      await Student.create(student)
-      await Student.create(student2)
-      const dataAttendance = await Attendance.create(attendance)
-      token = generateToken({
-        id: dataTeacher.data.id,
-        email: dataTeacher.data.email
-      })
-      tokent = generateToken({
-        id: dataDummy.data.id,
-        email: dataDummy.data.email
-      })
-      id = dataAttendance.id
-      done()
-    } catch (error) {
-      done(error)
+describe.skip('/attendances sections, only user who have role teacher can do this action', () => {
+  beforeAll(done => {
+    const teacher = {
+      name: 'teacher',
+      email: 'teacher@mail.com',
+      password: '12345',
+      role: 'teacher',
+      phoneNumber: '081234432180'
     }
+    const dummy = {
+      name: 'parent',
+      email: 'parent@mail.com',
+      password: '12345',
+      role: 'parent',
+      phoneNumber: '081234432180'
+    }
+    User.create(teacher)
+      .then(data => {
+        token = generateToken({
+          id: data.id,
+          email: data.email,
+          role: data.role
+        })
+        return Attendances.create({
+          attendancedate: attendanceId
+        })
+      })
+      .then(data => {
+        attendanceId = data.id
+        return User.create(dummy)
+      })
+      .then(data => {
+        tokent = generateToken({
+          id: data.id,
+          email: data.email,
+          role: data.role
+        })
+        return Student.create({
+          name: 'student',
+          ClassId: 1,
+          ParentId: data.id
+        })
+      })
+      .then(data => {
+        StudentId = data.id
+        return Student.create({
+          name: 'student2',
+          ClassId: 1,
+          ParentId: data.ParentId
+        })
+      })
+      .then(data => {
+        return StudentAttendance.create({
+          studentId: data.id,
+          status: 'sakit',
+          date: attendanceId
+        })
+      })
+      .then(data => {
+        id = data.id
+        done()
+      })
+      .catch(done)
   })
-  afterAll(async done => {
-    try {
-      await queryInterface.bulkDelete('Users', null, {})
-      done()
-    } catch (error) {
-      done(error)
-    }
+  afterAll(done => {
+    queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        done()
+      })
+      .catch(done)
   })
 
   describe('Create attendances section', () => {
@@ -74,14 +88,14 @@ describe('/attendances sections, only user who have role teacher can do this act
           .post('/attendances')
           .set('token', token)
           .send({
-            student: 'student',
+            StudentId,
             status: 'hadir',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(201)
-            expect(body).toHaveProperty('message')
+            expect(body.message).toBe('Success create attendances')
             done()
           })
       })
@@ -92,9 +106,9 @@ describe('/attendances sections, only user who have role teacher can do this act
           .post('/attendances')
           .set('token', tokent)
           .send({
-            student: 'student',
+            StudentId,
             status: 'hadir',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -108,14 +122,14 @@ describe('/attendances sections, only user who have role teacher can do this act
           .post('/attendances')
           .set('token', token)
           .send({
-            student: '',
+            StudentId: null,
             status: 'hadir',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body.message).toBe('Student name cannot be empty')
+            expect(body.message).toBe('Student cannot be empty')
             done()
           })
       })
@@ -124,9 +138,9 @@ describe('/attendances sections, only user who have role teacher can do this act
           .post('/attendances')
           .set('token', token)
           .send({
-            student: 'budi',
+            StudentId,
             status: '',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -140,14 +154,14 @@ describe('/attendances sections, only user who have role teacher can do this act
           .post('/attendances')
           .set('token', token)
           .send({
-            student: 'budi',
+            StudentId,
             status: 'hadir',
             date: null
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body).toHaveProperty('message')
+            expect(body.message).toBe('Date cannot be empty')
             done()
           })
       })
@@ -190,7 +204,7 @@ describe('/attendances sections, only user who have role teacher can do this act
           .send({
             student: 'student2',
             status: 'izin',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -206,9 +220,9 @@ describe('/attendances sections, only user who have role teacher can do this act
           .put('/attendances/' + id)
           .set('token', tokent)
           .send({
-            student: 'student',
+            StudentId,
             status: 'hadir',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -222,14 +236,14 @@ describe('/attendances sections, only user who have role teacher can do this act
           .put('/attendances/' + id)
           .set('token', token)
           .send({
-            student: '',
+            StudentId: null,
             status: 'hadir',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body.message).toBe('Student name cannot be empty')
+            expect(body.message).toBe('Student cannot be empty')
             done()
           })
       })
@@ -238,9 +252,9 @@ describe('/attendances sections, only user who have role teacher can do this act
           .put('/attendances/' + id)
           .set('token', token)
           .send({
-            student: 'budi',
+            StudentId,
             status: '',
-            date: new Date()
+            date: attendanceId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -254,14 +268,14 @@ describe('/attendances sections, only user who have role teacher can do this act
           .put('/attendances/' + id)
           .set('token', token)
           .send({
-            student: 'budi',
+            StudentId,
             status: 'hadir',
             date: null
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body).toHaveProperty('message')
+            expect(body.message).toBe('Date cannot be empty')
             done()
           })
       })
@@ -277,17 +291,6 @@ describe('/attendances sections, only user who have role teacher can do this act
             expect(err).toBeNull()
             expect(status).toBe(403)
             expect(body.message).toBe('Only admin can do this action')
-            done()
-          })
-      })
-      test("Because attendance doesn't exist", done => {
-        request(app)
-          .delete('/attendance/' + 100)
-          .set('token', token)
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(404)
-            expect(body.message).toBe('Attendance data not found')
             done()
           })
       })

@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           args: true,
           msg: 'Name cannot be empty'
+        },
+        len: {
+          args: [1],
+          msg: 'Name cannot be empty'
         }
       }
     },
@@ -35,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         notNull: {
           args: true,
+          msg: 'Password length cannot less than 5 character'
         }
       }
     },
@@ -44,6 +49,10 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           args: true,
+          msg: 'Role cannot be empty'
+        },
+        len: {
+          args: [1],
           msg: 'Role cannot be empty'
         }
       }

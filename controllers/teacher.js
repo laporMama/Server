@@ -1,12 +1,28 @@
 const { Teacher } = require('../models');
 
 class TeacherController {
-	static getAllClass (req, res, next) {
-		res.send('list kelas');
+	static async getAll (req, res, next) {
+		const teachers = await User.findAll({
+			where: {
+				role: 'teacher'
+			}
+		})
+
+		res.status(200).json({
+			teachers
+		})
 	}
 
-	static getAllStudentByClassId (req, res, next) {
-		res.send('list student berdasarkan kelas');
+	static async getById (req, res, next) {
+		const { id } = req.params;
+
+		const teacher = await User.findOne({
+			where: { id }
+		})
+
+		res.status(200).json({
+			teacher
+		})
 	}
 
 	static setAttendance (req, res, next) {

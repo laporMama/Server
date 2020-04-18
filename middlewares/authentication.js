@@ -1,20 +1,36 @@
 const Helper = require('../helpers/helper')
-const { Teacher } = require('../models')
+const { verify } = require('../helpers/helper')
+const { User } = require('../models')
 
 module.exports = (req, res, next) => {
-  const { token } = req.headers;
-  try {
-    const decoded = Helper.verify(token)
-    req.UserId = decoded.id
-    Teacher.findOne({
-      where: { id: req.UserId }
-    })
-      .then(Teacher => {
-        if (Teacher) next()
-        else next({ status: 401, message: `You Must Login / Register First` })
-      })
-      .catch(next)
-  } catch (err) {
-    next(err)
-  }
+  console.log('authen masuk');
+  let { token } = req.headers;
+
+	let payload = {};
+
+	try {
+		payload = verify(token);
+	} catch (error) {
+		next(error)
+	}
+
+	let { id, email } = payload;
+
+	User.findOne({
+		where: { id, email }
+	})
+		.then(result => {
+			if (result) {
+				req.decoded = payload;
+				next();
+			} else {
+				next({
+          status: 400,
+          message: 'Please Log in'
+				})
+			}
+
+			return null
+		})
+		.catch(next)
 };

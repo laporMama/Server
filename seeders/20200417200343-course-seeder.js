@@ -6,6 +6,10 @@ module.exports = {
       name: 'Matematika',
       createdAt: new Date(),
       updatedAt: new Date()
+    }, {
+      name: 'Sejarah',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
   },
 

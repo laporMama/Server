@@ -3,34 +3,33 @@ const { verify } = require('../helpers/helper')
 const { User } = require('../models')
 
 module.exports = (req, res, next) => {
-  console.log('authen masuk');
   let { token } = req.headers;
 
-	let payload = {};
+  let payload = {};
 
-	try {
-		payload = verify(token);
-	} catch (error) {
-		next(error)
-	}
+  try {
+      payload = verify(token);
+  } catch (error) {
+      next(error)
+  }
 
-	let { id, email } = payload;
+  let { id, email } = payload;
 
-	User.findOne({
-		where: { id, email }
-	})
-		.then(result => {
-			if (result) {
-				req.decoded = payload;
-				next();
-			} else {
-				next({
+  User.findOne({
+    where: { id, email }
+  })
+    .then(result => {
+      if (result) {
+        req.decoded = payload;
+        next();
+      } else {
+        next({
           status: 400,
           message: 'Please Log in'
-				})
-			}
+        })
+      }
 
-			return null
-		})
-		.catch(next)
+      return null
+    })
+    .catch(next)
 };

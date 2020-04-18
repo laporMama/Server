@@ -28,7 +28,7 @@ module.exports = {
         onUpdate: 'cascade',
         allowNull: false
       },
-      Name: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false
       },

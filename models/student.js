@@ -3,11 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   class Student extends sequelize.Sequelize.Model {}
 
   Student.init({
-    Name: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Name Cannot Null' },
+        notNull: { args: true, msg: 'Name Cannot be Null' },
         notEmpty: { args: true, msg: 'Name Cannot Empty' },
       }
     },
@@ -15,16 +15,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Product Id Cannot Null' },
-        isInt: { args: true, msg: 'Invalid Product Id' }
+        notNull: { args: true, msg: 'ClassId Cannot be Null' },
+        isInt: { args: true, msg: 'Invalid ClassId' }
       }
     },
     ParentId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notNull: { args: true, msg: 'Product Id Cannot Null' },
-        isInt: { args: true, msg: 'Invalid Product Id' }
+        notNull: { args: true, msg: 'ParentId Cannot be Null' },
+        isInt: { args: true, msg: 'Invalid ParentId' }
       }
     }
   }, {

@@ -1,7 +1,7 @@
 const { Student } = require('../models/');
 
 class StudentController {
-  static async getAll (req, res, next) {
+  static async getAll(req, res, next) {
     try {
       const students = await Student.findAll();
 
@@ -13,14 +13,14 @@ class StudentController {
     }
   }
 
-  static async getById (req, res, next) {
+  static async getById(req, res, next) {
     try {
       const { id } = req.params
 
       const student = await Student.findOne({
         where: { id }
       })
-  
+
       res.status(200).json({
         student
       })
@@ -29,14 +29,14 @@ class StudentController {
     }
   }
 
-  static async getByClassId (req, res, next) {
+  static async getByClassId(req, res, next) {
     try {
       const { ClassId } = req.params;
 
       const students = await Student.findAll({
         where: { ClassId }
       })
-  
+
       res.status(200).json({
         students
       })
@@ -45,14 +45,14 @@ class StudentController {
     }
   }
 
-  static async getChildren (req, res, next) {
+  static async getChildren(req, res, next) {
     try {
       const { id: ParentId } = req.decoded
 
       const student = await Student.findAll({
         where: { ParentId }
       })
-      
+
       res.status(200).json({
         student
       })
@@ -61,14 +61,14 @@ class StudentController {
     }
   }
 
-  static async deleteId (req, res, next) {
+  static async deleteId(req, res, next) {
     try {
       const { id } = req.params
 
       const _ = await Student.destroy({
         where: { id }
       })
-  
+
       res.status(200).json({
         msg: "delete Success"
       })
@@ -77,7 +77,7 @@ class StudentController {
     }
   }
 
-  static async updateId (req, res, next ) {
+  static async updateId(req, res, next) {
     try {
       const { name, ClassId, ParentId } = req.body
       const { id } = req.params
@@ -87,11 +87,11 @@ class StudentController {
           id
         }
       },
-      {
-        name,
-        ClassId,
-        ParentId
-      })
+        {
+          name,
+          ClassId,
+          ParentId
+        })
 
       res.status(200).json(student)
 
@@ -99,6 +99,7 @@ class StudentController {
       next(error)
     }
   }
+  static create(req, res, next){}
 }
 
 module.exports = StudentController

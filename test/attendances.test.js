@@ -9,7 +9,7 @@ let id = 0
 let attendanceId = null
 let StudentId = null
 
-describe.skip('/attendances sections, only user who have role teacher can do this action', () => {
+describe.skip('/attendances sections, only user who have role "teacher" can do this action', () => {
   beforeAll(done => {
     const teacher = {
       name: 'teacher',

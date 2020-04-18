@@ -1,23 +1,20 @@
 const router = require('express').Router();
-const teacherRouter = require('./teacher');
-const parentRouter = require('./parent');
-const adminRouter = require('./admin');
-const reportRouter = require('./report');
-const Authentication = require('../middlewares/authentication');
-const UserController = require('../controllers/user');
-const ClassesController = require('../controllers/class');
-const CoursesController = require('../controllers/course');
+const login = require('./login.js')
+const attendances = require('./attendances.js')
+const register = require('./register.js')
+const reports = require('./reports.js')
+const students = require('./students.js')
+const teachers = require('./teachers.js')
+const isLogin = require('../middlewares/authentication.js')
+const { isAdmin } = require('../middlewares/authorization.js')
 
-router.get('/courses', CoursesController.getAll);
-router.get('/classes', ClassesController.getAll);
-router.post('/login', UserController.login);
-
-// pindahin attendance jadi 1 router sendiri
-
-router.use(Authentication);
-router.use('/reports', reportRouter)
-router.use('/teachers', teacherRouter);
-router.use('/parents', parentRouter);
-router.use('/admin', adminRouter);
+router.use('/', login)
+router.use(isLogin)
+router.use('/reports', reports)
+router.use('/attendances', attendances)
+router.use(isAdmin)
+router.use('/teachers', teachers)
+router.use('/register', register)
+router.use('/students', students)
 
 module.exports = router

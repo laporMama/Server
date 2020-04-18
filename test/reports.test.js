@@ -87,13 +87,12 @@ describe('/reports section, only user who have role "teacher" can do this action
       })
   })
 
-  afterAll(async done => {
-    try {
-      await queryInterface.bulkDelete('Users', null, {})
-      done()
-    } catch (error) {
-      done(error)
-    }
+  afterAll(done => {
+    queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        done()
+      })
+      .catch(done)
   })
 
   describe('Create reports section', () => {

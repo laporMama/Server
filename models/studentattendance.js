@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     StudentId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -28,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     AttendanceId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,

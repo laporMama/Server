@@ -1,133 +1,255 @@
 const request = require('supertest')
 const app = require('../app.js')
-const { User, sequelize } = require('../models')
+const { User, Teacher, sequelize } = require('../models')
 const { queryInterface } = sequelize
 const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
+let id = 0
 
-describe('Create teachers section, only user who have role "admin" can do this action', () => {
-  beforeAll(async done => {
+describe.skip('/teachers section, only user who have role "admin" can do this action', () => {
+  beforeAll(done => {
     const dummy = {
-      username: 'budi',
+      name: 'budi',
       email: 'budi@mail.com',
       password: '12345',
       role: 'teacher',
       phoneNumber: '081234432180'
     }
     const admin = {
-      username: 'admin',
+      name: 'admin',
       email: 'admin@mail.com',
       password: '12345',
       role: 'admin',
       phoneNumber: '081234432180'
     }
     const parent = {
-      username: 'parent',
+      name: 'parent',
       email: 'parent@mail.com',
       password: '12345',
       role: 'parent',
       phoneNumber: '081234432180'
     }
-    const dataAdmin = await User.create(admin)
-    const dataDummy = await User.create(dummy)
-    await User.create(parent)
-    token = generateToken({
-      id: dataAdmin.data.id,
-      email: dataAdmin.data.email
-    })
-    tokent = generateToken({
-      id: dataDummy.data.id,
-      email: dataDummy.data.email
-    })
-    done()
+    const teacher = {
+      email: 'budi@mail.com',
+      course: 'Matematika'
+    }
+    User.create(admin)
+      .then(data => {
+        token = generateToken({
+          id: data.id,
+          email: data.email,
+          role: data.role
+        })
+        return User.create(dummy)
+      })
+      .then(data => {
+        tokent = generateToken({
+          id: data.id,
+          email: data.email,
+          role: data.role
+        })
+        return User.create(parent)
+      })
+      .then(() => {
+        return Teacher.create(teacher)
+      })
+      .then(data => {
+        id = data.id
+        done()
+      })
+      .catch(done)
   })
-  afterAll(async done => {
-    await queryInterface.bulkDelete('Users', null, {})
-    done()
+  afterAll(done => {
+    queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        done()
+      })
+      .catch(done)
   })
 
-  describe('Success response, will returning status code 201 and message', () => {
-    test('Create teacher with course name Matematika', done => {
-      request(app) 
-        .post('/teachers')
-        .set('token', token)
-        .send({
-          email: 'budi@mail.com',
-          course: 'Matematika'
-        })
-        .end((err, { status, body }) => {
-          expect(err).toBeNull()
-          expect(status).toBe(201)
-          expect(body.message).toBe('Success create budi as Matematika teacher')
-          // ^ success create <username> as <course name> teacher
-          done()
-        })
+  describe('Create teachers section', () => {
+    describe('Success response, will returning status code 201 and message', () => {
+      test('Create teacher with course name Matematika', done => {
+        request(app)
+          .post('/teachers')
+          .set('token', token)
+          .send({
+            email: 'budi@mail.com',
+            course: 'Matematika'
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(201)
+            expect(body.message).toBe('Success create teacher')
+            done()
+          })
+      })
+    })
+    describe('Error response', () => {
+      test("Because role who want to create isn't admin", done => {
+        request(app)
+          .post('/teachers')
+          .set('token', tokent)
+          .send({
+            email: 'budi@mail.com',
+            course: 'Matematika'
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(403)
+            expect(body.message).toBe('Only admin can do this action')
+            done()
+          })
+      })
+      test('Because email empty', done => {
+        request(app)
+          .post('/teachers')
+          .set('token', token)
+          .send({
+            email: '',
+            course: 'Matematika'
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(400)
+            expect(body.message).toBe('Teacher email cannot be empty')
+            done()
+          })
+      })
+      test('Because course empty', done => {
+        request(app)
+          .post('/teachers')
+          .set('token', token)
+          .send({
+            email: 'budi@mail.com',
+            course: ''
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(400)
+            expect(body.message).toBe('Teacher course cannot be empty')
+            done()
+          })
+      })
     })
   })
-  describe('Error response', () => {
-    test("Because role who want to create isn't admin", done => {
-      request(app)
-        .post('/teachers')
-        .set('token', tokent)
-        .send({
-          email: 'budi@mail.com',
-          course: 'Matematika'
-        })
-        .end((err, { status, body }) => {
-          expect(err).toBeNull()
-          expect(status).toBe(403)
-          expect(body.message).toBe('Only admin can do this action')
-          done()
-        })
+  describe('Find all teachers section', () => {
+    describe('Success response', () => {
+      test('will returning status code 200 and teachers data', done => {
+        request(app)
+          .get('/teeachers')
+          .set('token', token)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(200)
+            expect(body).toHaveProperty('data')
+            done()
+          })
+      })
     })
-    test("Because teacher have same course", done => {
-      request(app)
-        .post('/teachers')
-        .set('token', token)
-        .send({
-          email: 'budi@mail.com',
-          course: 'Matematika'
-        })
-        .end((err, { status, body }) => {
-          expect(err).toBeNull()
-          expect(status).toBe(400)
-          expect(body.message).toBe('Teacher budi already have matematika course')
-          // ^ Teacher <teacher name> already have <course name> course
-          done()
-        })
+    describe('Error response', () => {
+      test("Because role who want to create isn't admin", done => {
+        request(app)
+          .get('/teachers')
+          .set('token', tokent)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(403)
+            expect(body.message).toBe('Only admin can do this action')
+            done()
+          })
+      })
     })
-    test("Because role you want to register isn't teacher", done => {
-      request(app)
-        .post('/teachers')
-        .set('token', token)
-        .send({
-          email: 'parent@mail.com',
-          course: 'Matematika'
-        })
-        .end((err, { status, body }) => {
-          expect(err).toBeNull()
-          expect(status).toBe(400)
-          expect(body.message).toBe("parent role isn't teacher")
-          // ^ <name> role isn't teacher
-          done()
-        })
+  })
+  describe('Update teachers sections', () => {
+    describe('Success response', () => {
+      test('Will returning status code 200 and message', done => {
+        request(app)
+          .put('/teachers/' + id)
+          .set('token', token)
+          .send({
+            email: 'budiman@mail.com',
+            course: 'IPA'
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(200)
+            expect(body.message).toBe('Success update data teacher')
+            done()
+          })
+      })
     })
-    test("Because teacher email doesn't exist", done => {
-      request(app)
-        .post('/teachers')
-        .set('token', token)
-        .send({
-          email: 'teacher@mail.com',
-          course: 'Matematika'
-        })
-        .end((err, { status, body }) => {
-          expect(err).toBeNull()
-          expect(status).toBe(404)
-          expect(body.message).toBe("teacher@mail.com doesn't exist")
-          // ^ <registered email> doesn't exist
-          done()
-        })
+    describe('Error response', () => {
+      test("Because role who want to create isn't admin", done => {
+        request(app)
+          .put('/teachers/' + id)
+          .set('token', tokent)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(403)
+            expect(body.message).toBe('Only admin can do this action')
+            done()
+          })
+      })
+      test('Because email empty', done => {
+        request(app)
+          .put('/teachers/' + id)
+          .set('token', token)
+          .send({
+            email: '',
+            course: 'Matematika'
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(400)
+            expect(body.message).toBe('Teacher email cannot be empty')
+            done()
+          })
+      })
+      test('Because course empty', done => {
+        request(app)
+          .put('/teachers/' + id)
+          .set('token', token)
+          .send({
+            email: 'budi@mail.com',
+            course: ''
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(400)
+            expect(body.message).toBe('Teacher course cannot be empty')
+            done()
+          })
+      })
+    })
+  })
+  describe('Delete teachers sections', () => {
+    describe('Error response', () => {
+      test("Because role who want to create isn't admin", done => {
+        request(app)
+          .delete('/teachers/' + id)
+          .set('token', tokent)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(403)
+            expect(body.message).toBe('Only admin can do this action')
+            done()
+          })
+      })
+    })
+    describe('Success response', () => {
+      test('Will returning status code 200 and message', done => {
+        request(app)
+          .delete('/teachers/' + id)
+          .set('token', token)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(200)
+            expect(body.message).toBe('Success delete teacher data')
+            done()
+          })
+      })
     })
   })
 })

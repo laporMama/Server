@@ -6,62 +6,70 @@ const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
 let id = 0
+let ParentId = 0
+const ClassId = 1
 
 describe('/students sections, only user who have role "admin" can do this action', () => {
-  beforeAll(async done => {
-    try {
-      const dummy = {
-        username: 'budi',
-        email: 'budi@mail.com',
-        password: '12345',
-        role: 'teacher',
-        phoneNumber: '081234432180'
-      }
-      const admin = {
-        username: 'admin',
-        email: 'admin@mail.com',
-        password: '12345',
-        role: 'admin',
-        phoneNumber: '081234432180'
-      }
-      const parent = {
-        username: 'parent',
-        email: 'parent@mail.com',
-        password: '12345',
-        role: 'parent',
-        phoneNumber: '081234432180'
-      }
-      const student = {
-        name: 'murid',
-        class: 'IX 1',
-        parentEmail: 'parent@mail.com'
-      }
-      const dataAdmin = await User.create(admin)
-      const dataDummy = await User.create(dummy)
-      await User.create(parent)
-      const dataStudent = await Student.create(student)
-      token = generateToken({
-        id: dataAdmin.id,
-        email: dataAdmin.email
-      })
-      tokent = generateToken({
-        id: dataDummy.id,
-        email: dataDummy.email
-      })
-      id = dataStudent.id
-      done()
-    } catch (error) {
-      done(error)
+  beforeAll(done => {
+    const dummy = {
+      name: 'budi',
+      email: 'budi@mail.com',
+      password: '12345',
+      role: 'teacher',
+      phoneNumber: '081234432180'
     }
-  })
-  afterAll(async done => {
-    try {
-      await queryInterface.bulkDelete('Users', null, {})
-      done()
-    } catch (error) {
-      done(error)
+    const admin = {
+      name: 'admin',
+      email: 'admin@mail.com',
+      password: '12345',
+      role: 'admin',
+      phoneNumber: '081234432180'
     }
+    const parent = {
+      name: 'parent',
+      email: 'parent@mail.com',
+      password: '12345',
+      role: 'parent',
+      phoneNumber: '081234432180'
+    }
+    User.create(admin)
+      .then(data => {
+        token = generateToken({
+          id: data.id,
+          email: data.email,
+          role: data.role
+        })
+        return User.create(dummy)
+      })
+      .then(data => {
+        tokent = generateToken({
+          id: data.id,
+          email: data.email,
+          role: data.role
+        })
+        return User.create(parent)
+      })
+      .then(data => {
+        return Student.create({
+          name: 'murid',
+          ClassId,
+          ParentId: data.id
+        })
+      })
+      .then(data => {
+        id = data.id
+        done()
+      })
+      .catch(done)
   })
+  afterAll(done => {
+    queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        done()
+      })
+      .catch(done)
+  })
+
   describe('Create students section', () => {
     describe('Success response, will returning status code 201 and message', () => {
       test('Create Student', done => {
@@ -70,8 +78,8 @@ describe('/students sections, only user who have role "admin" can do this action
           .set('token', token)
           .send({
             name: 'student',
-            class: 'IX 1',
-            parentEmail: 'parent@mail.com'
+            ClassId,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -84,14 +92,14 @@ describe('/students sections, only user who have role "admin" can do this action
       })
     })
     describe('Error response', () => {
-      test.skip("Because role who want to create isn't admin", done => {
+      test("Because role who want to create isn't admin", done => {
         request(app)
           .post('/students')
           .set('token', tokent)
           .send({
             name: 'student',
-            class: 'IX 1',
-            parentEmail: 'parent@mail.com'
+            ClassId,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -106,8 +114,8 @@ describe('/students sections, only user who have role "admin" can do this action
           .set('token', token)
           .send({
             name: '',
-            class: 'IX 1',
-            parentEmail: 'parent@mail.com'
+            ClassId,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -116,19 +124,19 @@ describe('/students sections, only user who have role "admin" can do this action
             done()
           })
       })
-      test("Because parent email is empty", done => {
+      test("Because parent is empty", done => {
         request(app)
           .post('/students')
           .set('token', token)
           .send({
             name: 'student',
-            class: 'IX 1',
-            parentEmail: ''
+            ClassId,
+            ParentId: null
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body.message).toBe("Parent email cannot be empty")
+            expect(body.message).toBe("Parent cannot be empty")
             done()
           })
       })
@@ -138,8 +146,8 @@ describe('/students sections, only user who have role "admin" can do this action
           .set('token', token)
           .send({
             name: 'student',
-            class: '',
-            parentEmail: 'parent@mail.com'
+            ClassId: null,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -165,7 +173,7 @@ describe('/students sections, only user who have role "admin" can do this action
       })
     })
     describe('Error response', () => {
-      test.skip("Because role who want to create isn't admin", done => {
+      test.skip("Because role isn't admin", done => {
         request(app)
           .get('/students')
           .set('token', tokent)
@@ -187,7 +195,7 @@ describe('/students sections, only user who have role "admin" can do this action
           .send({
             name: 'student',
             class: 'IX 2',
-            parentEmail: 'parent@mail.com'
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -198,14 +206,14 @@ describe('/students sections, only user who have role "admin" can do this action
       })
     })
     describe('Error response', () => {
-      test.ksip("Because role isn't admin", done => {
+      test("Because role isn't admin", done => {
         request(app)
           .put('/students/' + id)
           .set('token', tokent)
           .send({
             name: 'student',
-            class: 'IX 1',
-            parentEmail: 'parent@mail.com'
+            ClassId,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -220,8 +228,8 @@ describe('/students sections, only user who have role "admin" can do this action
           .set('token', token)
           .send({
             name: '',
-            class: 'IX 1',
-            parentEmail: 'parent@mail.com'
+            ClassId,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -230,19 +238,19 @@ describe('/students sections, only user who have role "admin" can do this action
             done()
           })
       })
-      test("Because parent email is empty", done => {
+      test("Because parent is empty", done => {
         request(app)
           .put('/students/' + id)
           .set('token', token)
           .send({
             name: 'student',
-            class: 'IX 1',
-            parentEmail: ''
+            ClassId,
+            ParentId: null
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body.message).toBe("Parent email cannot be empty")
+            expect(body.message).toBe("Parent cannot be empty")
             done()
           })
       })
@@ -252,8 +260,8 @@ describe('/students sections, only user who have role "admin" can do this action
           .set('token', token)
           .send({
             name: 'studentsss',
-            class: '',
-            parentEmail: 'parent@mail.com'
+            ClassId: null,
+            ParentId
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()

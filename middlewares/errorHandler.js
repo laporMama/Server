@@ -1,19 +1,26 @@
 module.exports = (err, req, res, next) => {
-  // console.log(err.name)
-  if (err.name === 'SequelizeValidationError') {
-    err.status = 400;
-    err.message = err.errors.map(el => el.message);
+  let status = 500
+  let message = 'Internal Server Error'
+
+  console.log(err, '<<<<<===!!!ERROR!!!===>>>>>')
+
+  if (err.status) {
+    status = err.status
+    message = err.message
+  } else if (err.name === 'SequelizeValidationError') {
+    let error = []
+    err.errors.forEach(el => error.push(el.message))
+    status = 400
+    message = error[0]
+  } else if (err.name === 'SequelizeUniqueConstraintError') {
+    status = 400
+    message = 'email already in use'
+  } else if (err.name === 'JsonWebTokenError') {
+    status = 401
+    message = 'please login first!'
   }
 
-  if (err.name === 'SequelizeUniqueConstraintError') {
-    err.status = 400;
-    err.message = 'Email Already Exists';
-  }
-
-  if (err.name === 'JsonWebTokenError') {
-    err.status = 401;
-    err.message = 'You Must Login / Register First';
-  }
-
-  res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
+  res.status(status).json({
+    message
+  })
 }

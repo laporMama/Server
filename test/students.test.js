@@ -144,7 +144,7 @@ describe('/students sections, only user who have role "admin" can do this action
   })
   describe('Get all students sections', () => {
     describe('Success response', () => {
-      test('Will returning status code 200 and list product', done => {
+      test('Will returning status code 200 and list students', done => {
         request(app)
           .get('/students')
           .set('token', token)

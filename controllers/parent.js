@@ -12,7 +12,6 @@ class ParentController {
       parents
     })
   }
-
   static async getById (req, res, next) {
     const { id } = req.params;
 

@@ -4,7 +4,7 @@ const { hashPassword } = require('../helpers/helper');
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('Users', [{
-      name: 'teacher',
+      name: 'teacher1',
       email: 'teacher@mail.com',
       password: hashPassword('qweqwe'),
       role: 'teacher',
@@ -12,8 +12,32 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      name: 'parent',
-      email: 'parent@mail.com',
+      name: 'teacher2',
+      email: 'teacher2@mail.com',
+      password: hashPassword('qweqwe'),
+      role: 'teacher',
+      phoneNumber: '081234432180',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      name: 'parent1',
+      email: 'parent1@mail.com',
+      password: hashPassword('qweqwe'),
+      role: 'parent',
+      phoneNumber: '081234432180',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      name: 'parent2',
+      email: 'parent2@mail.com',
+      password: hashPassword('qweqwe'),
+      role: 'parent',
+      phoneNumber: '081234432180',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      name: 'parent3',
+      email: 'parent3@mail.com',
       password: hashPassword('qweqwe'),
       role: 'parent',
       phoneNumber: '081234432180',

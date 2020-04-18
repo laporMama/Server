@@ -8,31 +8,48 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         max: {
-          args: 100
+          args: [100],
+          msg: 'Maximum score is 100'
         },
         min: {
-          args: 0
+          args: [0],
+          msg: 'Minimum score is 0'
+        },
+        isInt: {
+          args: true,
+          msg: 'Score should be a number'
         }
       }
     },
     reportDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      valdiate: {
+      validate: {
         notNull: {
-          args: true
+          args: true,
+          msg: 'Report date cannot be null'
         },
-        isAfter: {
-          args: `${new Date().toDateString()}`
+        notEmpty: {
+          args: true,
+          msg: 'Report date cannot be empty'
         }
       }
     },
     type: {
       type: DataTypes.STRING,
       allowNull:false,
-      valdiate: {
+      validate: {
         notNull: {
-          args: true
+          args: true,
+          msg: 'Report type cannot be null'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Report type cannot be empty'
+        },
+        isIn: {
+          args: [['uts', 'uas', 'nilai']],
+          msg: 'Report type is invalid'
         }
       }
     },
@@ -41,7 +58,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          args: true
+          args: true,
+          msg: 'StudentId cannot be null'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'StudentId cannot be empty'
+        },
+        isInt: {
+          args: true,
+          msg: 'Invalid StudentId'
         }
       }
     },
@@ -50,7 +76,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          args: true
+          args: true,
+          msg: 'CourseId cannot be null'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'CourseId cannot be empty'
+        },
+        isInt: {
+          args: true,
+          msg: 'Invalid CourseId'
         }
       }
     }

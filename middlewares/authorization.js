@@ -2,8 +2,7 @@ const { Teacher, Parent } = require('../models')
 
 module.exports = {
     AdminAuthorization: (req, res, next) => {
-      console.log('author masuk');
-      console.log(req.decoded);
+      // console.log('author masuk');
       const { role } = req.decoded
 
       if (role === 'admin') {
@@ -11,7 +10,7 @@ module.exports = {
       } else {
         next({
           status: 401,
-          message: 'Not authorized!'
+          message: 'Only admin can do this action!'
         })
       }
     },
@@ -23,19 +22,20 @@ module.exports = {
       } else {
         next({
           status: 401,
-          message: 'Not authorized!'
+          message: 'Only parent can do this action'
         })
       }
     },
     TeacherAuthorization: (req, res, next) => {
+      // console.log('author masuk');
       const { role } = req.decoded
 
       if (role === 'teacher') {
         next()
       } else {
         next({
-          status: 401,
-          message: 'Not authorized!'
+          status: 403,
+          message: 'Only teacher can do this action'
         })
       }
     }

@@ -6,7 +6,7 @@ const { TeacherAuthorization } = require('../middlewares/authorization');
 router.use(TeacherAuthorization);
 router.get('/class/:ClassId', StudentController.getByClassId);
 router.post('/attendance/:studentId', TeacherController.setAttendance);
-router.get('/score', TeacherController.getStudentScore); // path => /teachers/score?studentId=XXX&courseId=XXX
-router.post('/score', TeacherController.setStudentScore); // subjectId & courseId dilempar via req.body
+
+//perlu ada: after teacher login => keluarin semua class => get all student by class
 
 module.exports = router;

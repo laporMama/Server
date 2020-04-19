@@ -1,8 +1,11 @@
 const router = require('express').Router()
-const { create, getAll, updateId, deleteId } = require('../controllers/student.js')
+const { create, getAll, updateId, deleteId, getByClassId } = require('../controllers/student.js')
+const { isAdmin } = require('../middlewares/authorization.js')
 
-router.post('/', create)
 router.get('/', getAll)
+router.get('/:id',getByClassId)
+router.use(isAdmin)
+router.post('/', create)
 router.put('/:id', updateId)
 router.delete('/:id', deleteId)
 

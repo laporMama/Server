@@ -6,7 +6,7 @@ const { queryInterface } = sequelize
 let token = ''
 let tokent = ''
 
-describe.skip('Register section, only user who have role "admin" can do this action', () => {
+describe('Register section, only user who have role "admin" can do this action', () => {
   beforeAll(done => {
     const dummy = {
       name: 'budi',
@@ -81,7 +81,7 @@ describe.skip('Register section, only user who have role "admin" can do this act
         .end((err, { status, body }) => {
           expect(err).toBeNull()
           expect(status).toBe(201)
-          expect(body.message).toBe('Success create parent as parent') // <= success create <role>
+          expect(body.message).toBe('Success create parent') // <= success create <role>
           done()
         })
     })
@@ -119,7 +119,7 @@ describe.skip('Register section, only user who have role "admin" can do this act
         .end((err, { status, body }) => {
           expect(err).toBeNull()
           expect(status).toBe(400)
-          expect(body.message).toBe('email already in use')
+          expect(body.message).toBe('Email already in use')
           done()
         })
     })
@@ -165,7 +165,7 @@ describe.skip('Register section, only user who have role "admin" can do this act
         .set('token', token)
         .send({
           name: 'teacher',
-          email: 'teacher2@mailcom',
+          email: 'teachermailcom',
           password: '12345',
           role: 'teacher',
           phoneNumber: '081234432180'

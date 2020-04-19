@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles --coverage",
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles --coverage --forceExit",
     "dev": "NODE_ENV=development nodemon ./bin/http.js",
     "start": "node ./bin/http.js",
     "testwin": "set NODE_ENV=test&& jest reports.test.js --runInBand --detectOpenHandles",

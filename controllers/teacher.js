@@ -1,4 +1,4 @@
-const { Teacher } = require('../models');
+const { Teacher, Course } = require('../models');
 
 module.exports = {
 	async getAll(req, res, next) {
@@ -20,18 +20,19 @@ module.exports = {
 	},
 	destroy(req, res, next) {
 
-	}
-	// async getById(req, res, next) {
-	// 	const { id } = req.params;
+	},
+	async getById(req, res, next) {
+		const { id } = req.params;
 
-	// 	const teacher = await User.findOne({
-	// 		where: { id }
-	// 	})
+		const teacher = await Teacher.findOne({
+			where: { id },
+			include:[{model: Course}]
+		})
 
-	// 	res.status(200).json({
-	// 		teacher
-	// 	})
-	// },
+		res.status(200).json({
+			teacher
+		})
+	},
 	// setAttendance(req, res, next) {
 	// 	res.send('absensi siswa');
 	// },

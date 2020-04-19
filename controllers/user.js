@@ -1,9 +1,19 @@
-const { User, Teacher, Parent, Student } = require('../models');
+const { User } = require('../models');
 const helper = require('../helpers/helper');
 
 class UserController {
   static register(req, res, next) {
+    const { name, email, password, role, phoneNumber } = req.body
 
+    User.create({
+      name, email, password, role, phoneNumber
+    })
+      .then(() => {
+        res.status(201).json({
+          message: `Success create ${role}`
+        })
+      })
+      .catch(next)
   }
 
   static async login(req, res, next) {
@@ -28,6 +38,10 @@ class UserController {
 
           res.status(200).json({
             token,
+            data: {
+              id: user.id,
+              name: user.name
+            },
             message: `Success login as ${user.role}`
           });
         } else {

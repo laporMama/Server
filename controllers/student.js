@@ -31,10 +31,10 @@ class StudentController {
 
   static async getByClassId(req, res, next) {
     try {
-      const { ClassId } = req.params;
+      const { id } = req.params;
 
       const students = await Student.findAll({
-        where: { ClassId }
+        where: { ClassId: id }
       })
 
       res.status(200).json({

@@ -7,7 +7,7 @@
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles --coverage --forceExit",
     "dev": "NODE_ENV=development nodemon ./bin/http.js",
     "start": "node ./bin/http.js",
-    "testwin": "set NODE_ENV=test&& jest reports.test.js --runInBand --detectOpenHandles",
+    "testwin": "set NODE_ENV=test&& jest login.test.js --runInBand --detectOpenHandles",
     "devwin": "set NODE_ENV=development&& nodemon ./bin/http.js",
     "dbtestreset": "set NODE_ENV=test&& sequelize db:migrate:undo:all&& sequelize db:migrate&& sequelize db:seed:all"
   },

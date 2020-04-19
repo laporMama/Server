@@ -9,7 +9,7 @@ class ReportController {
 
       if (role === 'teacher' || role === 'admin') {
         const { CourseId } = await Teacher.findOne({
-          where: { id: UserId }
+          where: { UserId }
         });
   
         //#region versi 1

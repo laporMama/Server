@@ -1,15 +1,15 @@
 const request = require('supertest')
 const app = require('../app.js')
-const { User, Student, StudentAttendance, Attendances, sequelize } = require('../models')
+const { User, Student, StudentAttendance, Attendance, sequelize } = require('../models')
 const { queryInterface } = sequelize
 const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
 let id = 0
-let attendanceId = null
+let AttendanceId = null
 let StudentId = null
 
-describe.skip('/attendances sections, only user who have role "teacher" can do this action', () => {
+describe('/attendances sections, only user who have role "teacher" can do this action', () => {
   beforeAll(done => {
     const teacher = {
       name: 'teacher',
@@ -32,12 +32,12 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           email: data.email,
           role: data.role
         })
-        return Attendances.create({
-          attendancedate: attendanceId
+        return Attendance.create({
+          attendanceDate: new Date()
         })
       })
       .then(data => {
-        attendanceId = data.id
+        AttendanceId = data.id
         return User.create(dummy)
       })
       .then(data => {
@@ -62,9 +62,9 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
       })
       .then(data => {
         return StudentAttendance.create({
-          studentId: data.id,
+          StudentId: data.id,
           status: 'sakit',
-          date: attendanceId
+          AttendanceId
         })
       })
       .then(data => {
@@ -80,7 +80,6 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
       })
       .catch(done)
   })
-
   describe('Create attendances section', () => {
     describe('Success response', () => {
       test('Will returning status code 201 and message', done => {
@@ -89,8 +88,7 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .set('token', token)
           .send({
             StudentId,
-            status: 'hadir',
-            date: attendanceId
+            status: 'hadir'
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -107,8 +105,7 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .set('token', tokent)
           .send({
             StudentId,
-            status: 'hadir',
-            date: attendanceId
+            status: 'hadir'
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -117,14 +114,13 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
             done()
           })
       })
-      test('Because student name empty', done => {
+      test('Because student empty', done => {
         request(app)
           .post('/attendances')
           .set('token', token)
           .send({
             StudentId: null,
-            status: 'hadir',
-            date: attendanceId
+            status: 'hadir'
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -139,29 +135,12 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .set('token', token)
           .send({
             StudentId,
-            status: '',
-            date: attendanceId
+            status: ''
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
             expect(body.message).toBe('Status cannot be empty')
-            done()
-          })
-      })
-      test('Because date empty', done => {
-        request(app)
-          .post('/attendances')
-          .set('token', token)
-          .send({
-            StudentId,
-            status: 'hadir',
-            date: null
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(400)
-            expect(body.message).toBe('Date cannot be empty')
             done()
           })
       })
@@ -181,19 +160,6 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           })
       })
     })
-    describe('Error responses', () => {
-      test("because user role doesn't teacher", done => {
-        request(app)
-          .get('/attendances')
-          .set('token', tokent)
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(403)
-            expect(body.message).toBe('Only teacher can do this action')
-            done()
-          })
-      })
-    })
   })
   describe('Update attendances section', () => {
     describe('Success responses', () => {
@@ -202,9 +168,8 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .put('/attendances/' + id)
           .set('token', token)
           .send({
-            student: 'student2',
-            status: 'izin',
-            date: attendanceId
+            StudentId,
+            status: 'izin'
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -221,8 +186,7 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .set('token', tokent)
           .send({
             StudentId,
-            status: 'hadir',
-            date: attendanceId
+            status: 'hadir'
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -237,8 +201,7 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .set('token', token)
           .send({
             StudentId: null,
-            status: 'hadir',
-            date: attendanceId
+            status: 'hadir'
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -253,29 +216,12 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
           .set('token', token)
           .send({
             StudentId,
-            status: '',
-            date: attendanceId
+            status: ''
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
             expect(body.message).toBe('Status cannot be empty')
-            done()
-          })
-      })
-      test('Because date empty', done => {
-        request(app)
-          .put('/attendances/' + id)
-          .set('token', token)
-          .send({
-            StudentId,
-            status: 'hadir',
-            date: null
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(400)
-            expect(body.message).toBe('Date cannot be empty')
             done()
           })
       })
@@ -285,12 +231,12 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
     describe('Error response', () => {
       test("Because role isn't admin", done => {
         request(app)
-          .delete('/attendance/' + id)
+          .delete('/attendances/' + id)
           .set('token', tokent)
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(403)
-            expect(body.message).toBe('Only admin can do this action')
+            expect(body.message).toBe('Only teacher can do this action')
             done()
           })
       })
@@ -298,7 +244,7 @@ describe.skip('/attendances sections, only user who have role "teacher" can do t
     describe('Success response', () => {
       test('Will returning status code 200 and message', done => {
         request(app)
-          .delete('/attendance/' + id)
+          .delete('/attendances/' + id)
           .set('token', token)
           .end((err, { status, body }) => {
             expect(err).toBeNull()

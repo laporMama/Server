@@ -9,7 +9,7 @@ let id = 0
 let UserId = 0
 const CourseId = 1
 
-describe.skip('/teachers section, only user who have role "admin" can do this action', () => {
+describe('/teachers section, only user who have role "admin" can do this action', () => {
   beforeAll(done => {
     User.create({
       name: 'admin',

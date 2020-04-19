@@ -6,7 +6,7 @@ const { queryInterface } = sequelize
 let token = ''
 let tokent = ''
 
-describe.skip('Register section, only user who have role "admin" can do this action', () => {
+describe('Register section, only user who have role "admin" can do this action', () => {
   beforeAll(done => {
     const dummy = {
       name: 'budi',

@@ -9,7 +9,7 @@ let reportId = 0
 let courseId = 0
 let studentId = 0
 
-describe.skip('/reports section, only user who have role "teacher" can do this actions', () => {
+describe('/reports section, only user who have role "teacher" can do this actions', () => {
   beforeAll(done => {
     const teacher = {
       name: 'teacher',
@@ -20,14 +20,6 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
     }
 
     let parent = null
-
-    // const reports = {
-    //   score: 99,
-    //   reportDate: new Date(),
-    //   type: 'uas',
-    //   CourseId: courseId,
-    //   StudentId: studentId
-    // }
 
     Course.create({
       name: 'MTK'
@@ -50,7 +42,6 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
         })
       })
       .then(result => {
-        console.log(result);
         return User.create({
           name: 'parent',
           email: 'parent@mail.com',
@@ -83,12 +74,19 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
       })
       .then(result => {
         studentId = result.id
-        done()
-        // return Report.create(reports)
+
+        return Report.create({
+          score: 99,
+          reportDate: new Date(),
+          type: 'uts',
+          CourseId: courseId,
+          StudentId: studentId
+        })
       })
-      // .then(result => {
-      //   reportId = result.id
-      // })
+      .then(result => {
+        reportId = result.id
+        done()
+      })
       .catch(err => {
         done(err)
       })
@@ -104,7 +102,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
 
   describe('Create reports section', () => {
     describe('Success response', () => {
-      test.skip('will returning status code 201 and message', done => {
+      test('will returning status code 201 and message', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -125,7 +123,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
       })
     })
     describe('Error response', () => {
-      test.skip("Because user role doesn't teacher", done => {
+      test("Because user role doesn't teacher", done => {
         request(app)
           .post('/reports')
           .set('token', tokenParent)
@@ -143,7 +141,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because student id is null', done => {
+      test('Because student id is null', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -160,7 +158,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because student id is empty', done => {
+      test('Because student id is empty', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -178,7 +176,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports date null', done => {
+      test('Because reports date null', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -196,7 +194,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports date empty', done => {
+      test('Because reports date empty', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -215,7 +213,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports type null', done => {
+      test('Because reports type null', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -232,7 +230,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports type empty', done => {
+      test('Because reports type empty', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -250,7 +248,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports type is invalid', done => {
+      test('Because reports type is invalid', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -268,7 +266,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because course id null', done => {
+      test('Because course id null', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -285,7 +283,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because course id empty', done => {
+      test('Because course id empty', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -303,7 +301,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports score is lower than 0', done => {
+      test('Because reports score is lower than 0', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -321,7 +319,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports score is greater than 100', done => {
+      test('Because reports score is greater than 100', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -339,7 +337,7 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
             done()
           })
       })
-      test.skip('Because reports score is null', done => {
+      test('Because reports score is null', done => {
         request(app)
           .post('/reports')
           .set('token', tokenTeacher)
@@ -373,165 +371,94 @@ describe.skip('/reports section, only user who have role "teacher" can do this a
           })
       })
     })
-  //   describe('Error response', () => {
-  //     test.skip("Because role who want to create isn't admin", done => {
-  //       request(app)
-  //         .get('/reports')
-  //         .set('token', tokent)
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(403)
-  //           expect(body.message).toBe('Only admin can do this action')
-  //           done()
-  //         })
-  //     })
-  //   })
-  // })
-  // describe('Update reports section', () => {
-  //   describe('Success response', () => {
-  //     test('will returning status code 200 and message', done => {
-  //       request(app)
-  //         .put('/reports/' + id)
-  //         .set('token', token)
-  //         .send({
-  //           student: 'budhi',
-  //           date: new Date(),
-  //           type: 'uas',
-  //           course: 'matematika'
-  //         })
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(200)
-  //           expect(body.message).toBe('Success update student report')
-  //           done()
-  //         })
-  //     })
-  //   })
-  //   describe('Error response', () => {
-  //     test.skip("Because user role doesn't teacher", done => {
-  //       request(app)
-  //         .put('/reports/' + id)
-  //         .set('token', tokent)
-  //         .send({
-  //           student: 'student',
-  //           date: new Date(),
-  //           type: 'uas',
-  //           course: 'matematika'
-  //         })
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(403)
-  //           expect(body.message).toBe('Only teacher can do this action')
-  //           done()
-  //         })
-  //     })
-  //     test('Because student name empty', done => {
-  //       request(app)
-  //         .put('/reports/' + id)
-  //         .set('token', token)
-  //         .send({
-  //           student: '',
-  //           date: new Date(),
-  //           type: 'uas',
-  //           course: 'matematika'
-  //         })
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(400)
-  //           expect(body.message).toBe('Student name cannot be empty')
-  //           done()
-  //         })
-  //     })
-  //     test('Because reports date empty', done => {
-  //       request(app)
-  //         .put('/reports/' + id)
-  //         .set('token', token)
-  //         .send({
-  //           student: 'student',
-  //           date: null,
-  //           type: 'uas',
-  //           course: 'matematika'
-  //         })
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(400)
-  //           expect(body).toHaveProperty('message')
-  //           done()
-  //         })
-  //     })
-  //     test('Because reports type empty', done => {
-  //       request(app)
-  //         .put('/reports/' + id)
-  //         .set('token', token)
-  //         .send({
-  //           student: 'student',
-  //           date: new Date(),
-  //           type: '',
-  //           course: 'matematika'
-  //         })
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(400)
-  //           expect(body.message).toBe('Report type cannot be empty')
-  //           done()
-  //         })
-  //     })
-  //     test('Because reports course empty', done => {
-  //       request(app)
-  //         .put('/reports/' + id)
-  //         .set('token', token)
-  //         .send({
-  //           student: 'student',
-  //           date: new Date(),
-  //           type: 'uas',
-  //           course: ''
-  //         })
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(400)
-  //           expect(body.message).toBe('Report type cannot be empty')
-  //           done()
-  //         })
-  //     })
-  //   })
-  // })
-  // describe('Delete reports section', () => {
-  //   describe('Error response', () => {
-  //     test.skip("Because role isn't admin", done => {
-  //       request(app)
-  //         .delete('/reports/' + id)
-  //         .set('token', tokent)
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(403)
-  //           expect(body.message).toBe('Only admin can do this action')
-  //           done()
-  //         })
-  //     })
-  //     test.skip("Because reports doesnt exist", done => {
-  //       request(app)
-  //         .delete('/reports/' + 100)
-  //         .set('token', token)
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(404)
-  //           expect(body.message).toBe('Report data not found')
-  //           done()
-  //         })
-  //     })
-  //   })
-  //   describe('Success response', () => {
-  //     test('Will returning status code 200 and message', done => {
-  //       request(app)
-  //         .delete('/reports/' + id)
-  //         .set('token', token)
-  //         .end((err, { status, body }) => {
-  //           expect(err).toBeNull()
-  //           expect(status).toBe(200)
-  //           expect(body.message).toBe('Success delete data student')
-  //           done()
-  //         })
-  //     })
-  //   })
+  })
+
+
+  describe('Update reports section', () => {
+    describe('Success response', () => {
+      test('will returning status code 200 and message', done => {
+        request(app)
+          .put('/reports/' + reportId)
+          .set('token', tokenTeacher)
+          .send({
+            score: 49
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(200)
+            expect(body.message).toBe('Success update student report')
+            done()
+          })
+      })
+    })
+    describe('Error response', () => {
+      test("Because user role isn't teacher", done => {
+        request(app)
+          .put('/reports/' + reportId)
+          .set('token', tokenParent)
+          .send({
+            score: 49
+          })
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(403)
+            expect(body.message).toBe('Only teacher can do this action')
+            done()
+          })
+      })
+      test("Because reports doesnt exist", done => {
+        request(app)
+          .put('/reports/' + 100)
+          .set('token', tokenTeacher)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(404)
+            expect(body.message).toBe('Report data not found')
+            done()
+          })
+      })
+    })
+  })
+
+
+  describe('Delete reports section', () => {
+    describe('Success response', () => {
+      test('Will returning status code 200 and message', done => {
+        request(app)
+          .delete('/reports/' + reportId)
+          .set('token', tokenTeacher)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(200)
+            expect(body.message).toBe('Success delete student report')
+            done()
+          })
+      })
+    })
+
+    describe('Error response', () => {
+      test("Because role isn't teacher", done => {
+        request(app)
+          .delete('/reports/' + reportId)
+          .set('token', tokenParent)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(403)
+            expect(body.message).toBe('Only teacher can do this action')
+            done()
+          })
+      })
+      test("Because reports doesnt exist", done => {
+        request(app)
+          .delete('/reports/' + 100)
+          .set('token', tokenTeacher)
+          .end((err, { status, body }) => {
+            expect(err).toBeNull()
+            expect(status).toBe(404)
+            expect(body.message).toBe('Report data not found')
+            done()
+          })
+      })
+    })
   })
 })

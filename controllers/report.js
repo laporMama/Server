@@ -106,13 +106,20 @@ class ReportController {
     const { score } = req.body;
 
     try {
-      await Report.update({ score }, {
+      const updatedCount = await Report.update({ score }, {
         where: { id }
       })
 
-      res.status(200).json({
-        message: 'Score successfully updated'
-      })
+      if (updatedCount[0] === 0) {
+        throw {
+          status: 404,
+          message: 'Report data not found'
+        }
+      } else {
+        res.status(200).json({
+          message: 'Success update student report'
+        })
+      }
     } catch (error) {
       next(error)
     }
@@ -122,13 +129,20 @@ class ReportController {
     const { id } = req.params;
 
     try {
-      await Report.destroy({
+      const deletedCount = await Report.destroy({
         where: { id }
       })
 
-      res.status(200).json({
-        message: 'Score successfully deleted'
-      })
+      if (deletedCount === 0) {
+        throw {
+          status: 404,
+          message: 'Report data not found'
+        }
+      } else {
+        res.status(200).json({
+          message: 'Success delete student report'
+        })
+      }
     } catch (error) {
       next(error)
     }

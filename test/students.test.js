@@ -172,19 +172,6 @@ describe('/students sections, only user who have role "admin" can do this action
           })
       })
     })
-    describe('Error response', () => {
-      test.skip("Because role isn't admin", done => {
-        request(app)
-          .get('/students')
-          .set('token', tokent)
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(403)
-            expect(body.message).toBe('Only admin can do this action')
-            done()
-          })
-      })
-    })
   })
   describe('Update data student sections', () => {
     describe('Success response', () => {

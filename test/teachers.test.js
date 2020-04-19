@@ -148,19 +148,6 @@ describe.skip('/teachers section, only user who have role "admin" can do this ac
           })
       })
     })
-    describe('Error response', () => {
-      test("Because role who want to create isn't admin", done => {
-        request(app)
-          .get('/teachers')
-          .set('token', tokent)
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(403)
-            expect(body.message).toBe('Only admin can do this action')
-            done()
-          })
-      })
-    })
   })
   describe('Update teachers sections', () => {
     describe('Success response', () => {

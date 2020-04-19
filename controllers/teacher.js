@@ -2,31 +2,44 @@ const { Teacher, Course } = require('../models');
 
 module.exports = {
 	async getAll(req, res, next) {
-		const teachers = await User.findAll({
-			where: {
-				role: 'teacher'
-			}
-		})
-
+		const teachers = await Teacher.findAll()
 		res.status(200).json({
-			teachers
+			data: teachers
 		})
-	},
-	create(req, res, next) {
-
 	},
 	update(req, res, next) {
-
+		const { UserId, CourseId } = req.body
+		const { id } = req.params
+		Teacher.update({
+			UserId, CourseId
+		}, {
+			where: { id }
+		})
+			.then(() => {
+				res.status(200).json({
+					message: 'Success update data teacher'
+				})
+			})
+			.catch(next)
 	},
 	destroy(req, res, next) {
-
+		const { id } = req.params
+		Teacher.destroy({
+			where: {id}
+		})
+			.then(() => {
+				res.status(200).json({
+					message: 'Success delete teacher data'
+				})
+			})
+			.catch(next)
 	},
 	async getById(req, res, next) {
 		const { id } = req.params;
 
 		const teacher = await Teacher.findOne({
 			where: { id },
-			include:[{model: Course}]
+			include: [{ model: Course }]
 		})
 
 		res.status(200).json({

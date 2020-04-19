@@ -6,53 +6,52 @@ const { generateToken } = require('../helpers/helper.js')
 let token = ''
 let tokent = ''
 let id = 0
+let UserId = 0
+const CourseId = 1
 
 describe.skip('/teachers section, only user who have role "admin" can do this action', () => {
   beforeAll(done => {
-    const dummy = {
-      name: 'budi',
-      email: 'budi@mail.com',
-      password: '12345',
-      role: 'teacher',
-      phoneNumber: '081234432180'
-    }
-    const admin = {
+    User.create({
       name: 'admin',
       email: 'admin@mail.com',
       password: '12345',
       role: 'admin',
       phoneNumber: '081234432180'
-    }
-    const parent = {
-      name: 'parent',
-      email: 'parent@mail.com',
-      password: '12345',
-      role: 'parent',
-      phoneNumber: '081234432180'
-    }
-    const teacher = {
-      email: 'budi@mail.com',
-      course: 'Matematika'
-    }
-    User.create(admin)
+    })
       .then(data => {
         token = generateToken({
           id: data.id,
           email: data.email,
           role: data.role
         })
-        return User.create(dummy)
+        return User.create({
+          name: 'budi',
+          email: 'budi@mail.com',
+          password: '12345',
+          role: 'teacher',
+          phoneNumber: '081234432180'
+        })
       })
       .then(data => {
+        UserId = data.id
         tokent = generateToken({
           id: data.id,
           email: data.email,
           role: data.role
         })
-        return User.create(parent)
+        return User.create({
+          name: 'parent',
+          email: 'parent@mail.com',
+          password: '12345',
+          role: 'parent',
+          phoneNumber: '081234432180'
+        })
       })
       .then(() => {
-        return Teacher.create(teacher)
+        return Teacher.create({
+          UserId,
+          CourseId
+        })
       })
       .then(data => {
         id = data.id
@@ -67,78 +66,11 @@ describe.skip('/teachers section, only user who have role "admin" can do this ac
       })
       .catch(done)
   })
-
-  describe('Create teachers section', () => {
-    describe('Success response, will returning status code 201 and message', () => {
-      test('Create teacher with course name Matematika', done => {
-        request(app)
-          .post('/teachers')
-          .set('token', token)
-          .send({
-            email: 'budi@mail.com',
-            course: 'Matematika'
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(201)
-            expect(body.message).toBe('Success create teacher')
-            done()
-          })
-      })
-    })
-    describe('Error response', () => {
-      test("Because role who want to create isn't admin", done => {
-        request(app)
-          .post('/teachers')
-          .set('token', tokent)
-          .send({
-            email: 'budi@mail.com',
-            course: 'Matematika'
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(403)
-            expect(body.message).toBe('Only admin can do this action')
-            done()
-          })
-      })
-      test('Because email empty', done => {
-        request(app)
-          .post('/teachers')
-          .set('token', token)
-          .send({
-            email: '',
-            course: 'Matematika'
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(400)
-            expect(body.message).toBe('Teacher email cannot be empty')
-            done()
-          })
-      })
-      test('Because course empty', done => {
-        request(app)
-          .post('/teachers')
-          .set('token', token)
-          .send({
-            email: 'budi@mail.com',
-            course: ''
-          })
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(400)
-            expect(body.message).toBe('Teacher course cannot be empty')
-            done()
-          })
-      })
-    })
-  })
   describe('Find all teachers section', () => {
     describe('Success response', () => {
       test('will returning status code 200 and teachers data', done => {
         request(app)
-          .get('/teeachers')
+          .get('/teachers')
           .set('token', token)
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -156,8 +88,8 @@ describe.skip('/teachers section, only user who have role "admin" can do this ac
           .put('/teachers/' + id)
           .set('token', token)
           .send({
-            email: 'budiman@mail.com',
-            course: 'IPA'
+            UserId,
+            CourseId: 2
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -172,6 +104,10 @@ describe.skip('/teachers section, only user who have role "admin" can do this ac
         request(app)
           .put('/teachers/' + id)
           .set('token', tokent)
+          .send({
+            UserId,
+            CourseId: 2
+          })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(403)
@@ -184,13 +120,13 @@ describe.skip('/teachers section, only user who have role "admin" can do this ac
           .put('/teachers/' + id)
           .set('token', token)
           .send({
-            email: '',
-            course: 'Matematika'
+            UserId: null,
+            CourseId: 1
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-            expect(body.message).toBe('Teacher email cannot be empty')
+            expect(body.message).toBe('Teacher cannot be empty')
             done()
           })
       })
@@ -199,8 +135,8 @@ describe.skip('/teachers section, only user who have role "admin" can do this ac
           .put('/teachers/' + id)
           .set('token', token)
           .send({
-            email: 'budi@mail.com',
-            course: ''
+            UserId,
+            CourseId: null
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()

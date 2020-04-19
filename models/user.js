@@ -1,7 +1,7 @@
 'use strict';
 const { hashPassword } = require('../helpers/helper');
 module.exports = (sequelize, DataTypes) => {
-  class User extends sequelize.Sequelize.Model { }
+  class User extends sequelize.Sequelize.Model {}
 
   User.init({
     name: {
@@ -84,7 +84,10 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'id',
       foreignKey: 'ParentId'
     });
-    User.hasMany(models.Teacher);
+    User.hasMany(models.Teacher, {
+      sourceKey: 'id',
+      foreignKey: 'UserId'
+    });
   };
 
   return User;

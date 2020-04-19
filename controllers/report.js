@@ -9,9 +9,9 @@ class ReportController {
 
       if (role === 'teacher' || role === 'admin') {
         const { CourseId } = await Teacher.findOne({
-          where: { id: UserId }
+          where: { UserId }
         });
-  
+
         //#region versi 1
         // result = await Class.findAll({
         //   include: [{
@@ -70,6 +70,7 @@ class ReportController {
         data: result
       });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

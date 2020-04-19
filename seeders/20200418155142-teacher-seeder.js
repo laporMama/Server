@@ -9,11 +9,6 @@ module.exports = {
       updatedAt: new Date()
     }, {
       UserId: 2,
-      CourseId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }, {
-      UserId: 3,
       CourseId: 2,
       createdAt: new Date(),
       updatedAt: new Date()

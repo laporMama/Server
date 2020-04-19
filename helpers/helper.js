@@ -9,7 +9,6 @@ const Helper = {
     return bcrypt.compareSync(input, password)
   },
   generateToken: (payload) => {
-    console.log(payload)
     return jwt.sign(payload, process.env.KEY)
   },
   verify: (token) => {

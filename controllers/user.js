@@ -1,13 +1,25 @@
-const { User } = require('../models');
+const { User, Teacher } = require('../models');
 const helper = require('../helpers/helper');
 
 class UserController {
   static register(req, res, next) {
-    const { name, email, password, role, phoneNumber } = req.body
+    const { name, email, password, role, phoneNumber, CourseId } = req.body
 
     User.create({
       name, email, password, role, phoneNumber
     })
+      .then(data => {
+        if (role !== 'teacher') {
+          res.status(201).json({
+            message: `Success create ${role}`
+          })
+        } else {
+          return Teacher.create({
+            UserId: data.id,
+            CourseId
+          })
+        }
+      })
       .then(() => {
         res.status(201).json({
           message: `Success create ${role}`

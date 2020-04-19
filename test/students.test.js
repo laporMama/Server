@@ -50,10 +50,11 @@ describe.skip('/students sections, only user who have role "admin" can do this a
         return User.create(parent)
       })
       .then(data => {
+        ParentId = data.id
         return Student.create({
           name: 'murid',
           ClassId,
-          ParentId: data.id
+          ParentId
         })
       })
       .then(data => {
@@ -69,7 +70,6 @@ describe.skip('/students sections, only user who have role "admin" can do this a
       })
       .catch(done)
   })
-
   describe('Create students section', () => {
     describe('Success response, will returning status code 201 and message', () => {
       test('Create Student', done => {
@@ -84,7 +84,6 @@ describe.skip('/students sections, only user who have role "admin" can do this a
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(201)
-            expect(body).toHaveProperty('data')
             expect(body.message).toBe('Success create student as student')
             // ^ Success create <student name> as student
             done()
@@ -181,7 +180,7 @@ describe.skip('/students sections, only user who have role "admin" can do this a
           .set('token', token)
           .send({
             name: 'student',
-            class: 'IX 2',
+            ClassId,
             ParentId
           })
           .end((err, { status, body }) => {
@@ -261,7 +260,7 @@ describe.skip('/students sections, only user who have role "admin" can do this a
   })
   describe('Delete data student sections', () => {
     describe('Error response', () => {
-      test.skip("Because role isn't admin", done => {
+      test("Because role isn't admin", done => {
         request(app)
           .delete('/students/' + id)
           .set('token', tokent)
@@ -269,17 +268,6 @@ describe.skip('/students sections, only user who have role "admin" can do this a
             expect(err).toBeNull()
             expect(status).toBe(403)
             expect(body.message).toBe('Only admin can do this action')
-            done()
-          })
-      })
-      test.skip("Because students doesnt exist", done => {
-        request(app)
-          .delete('/students/' + 100)
-          .set('token', token)
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(404)
-            expect(body.message).toBe('Student data not found')
             done()
           })
       })

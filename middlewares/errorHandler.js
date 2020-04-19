@@ -3,7 +3,7 @@ module.exports = (err, req, res, next) => {
   let message = 'Internal Server Error'
 
   console.log(err, '<<<<<===!!!ERROR!!!===>>>>>')
-
+  
   if (err.status) {
     status = err.status
     message = err.message

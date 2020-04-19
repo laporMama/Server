@@ -14,7 +14,7 @@ module.exports = (err, req, res, next) => {
     message = error[0]
   } else if (err.name === 'SequelizeUniqueConstraintError') {
     status = 400
-    message = 'email already in use'
+    message = 'Email already in use'
   } else if (err.name === 'JsonWebTokenError') {
     status = 401
     message = 'please login first!'

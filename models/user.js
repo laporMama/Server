@@ -1,7 +1,7 @@
 'use strict';
 const { hashPassword } = require('../helpers/helper');
 module.exports = (sequelize, DataTypes) => {
-  class User extends sequelize.Sequelize.Model {}
+  class User extends sequelize.Sequelize.Model { }
 
   User.init({
     name: {
@@ -21,12 +21,14 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      isEmail: {
-        args: true,
-        msg: 'Email must contain email format'
-      },
-      notNull: {
-        args: true,
+      validate: {
+        isEmail: {
+          args: true,
+          msg: 'Email must contain email format'
+        },
+        notNull: {
+          args: true,
+        }
       }
     },
     password: {
@@ -57,12 +59,12 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    phoneNumber:{
+    phoneNumber: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         len: {
-          args:  [9],
+          args: [9],
           msg: 'Phone number cannot less than 9 character'
         }
       }
@@ -76,12 +78,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  User.associate = function(models) {
+  User.associate = function (models) {
     // associations can be defined here
     User.hasMany(models.Student, {
-			sourceKey: 'id', 
-			foreignKey: 'ParentId'
-		});
+      sourceKey: 'id',
+      foreignKey: 'ParentId'
+    });
     User.hasMany(models.Teacher);
   };
 

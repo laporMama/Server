@@ -9,7 +9,7 @@ let reportId = 0
 let courseId = 0
 let studentId = 0
 
-describe('/reports section, only user who have role "teacher" can do this actions', () => {
+describe.skip('/reports section, only user who have role "teacher" can do this actions', () => {
   beforeAll(done => {
     const teacher = {
       name: 'teacher',

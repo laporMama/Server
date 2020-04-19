@@ -1,9 +1,19 @@
-const { User, Teacher, Parent, Student, Course } = require('../models');
+const { User } = require('../models');
 const helper = require('../helpers/helper');
 
 class UserController {
   static register(req, res, next) {
+    const { name, email, password, role, phoneNumber } = req.body
 
+    User.create({
+      name, email, password, role, phoneNumber
+    })
+      .then(() => {
+        res.status(201).json({
+          message: `Success create ${role}`
+        })
+      })
+      .catch(next)
   }
 
   static async login(req, res, next) {

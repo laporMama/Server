@@ -8,7 +8,6 @@ module.exports = {
       email: 'teacher@mail.com',
       password: hashPassword('qweqwe'),
       role: 'teacher',
-      CourseId: '1',
       phoneNumber: '081234432180',
       createdAt: new Date(),
       updatedAt: new Date()

@@ -7,7 +7,7 @@ module.exports = {
       next()
     } else {
       next({
-        status: 401,
+        status: 403,
         message: 'Only admin can do this action'
       })
     }

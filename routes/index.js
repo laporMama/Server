@@ -7,14 +7,16 @@ const students = require('./students.js')
 const teachers = require('./teachers.js')
 const isLogin = require('../middlewares/authentication.js')
 const { isAdmin } = require('../middlewares/authorization.js')
+const Class = require('./class')
 
 router.use('/', login)
 router.use(isLogin)
+router.use('/class', Class)
 router.use('/reports', reports)
 router.use('/attendances', attendances)
-router.use(isAdmin)
 router.use('/teachers', teachers)
-router.use('/register', register)
 router.use('/students', students)
+router.use(isAdmin)
+router.use('/register', register)
 
 module.exports = router

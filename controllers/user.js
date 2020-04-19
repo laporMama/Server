@@ -1,4 +1,4 @@
-const { User, Teacher, Parent, Student } = require('../models');
+const { User, Teacher, Parent, Student, Course } = require('../models');
 const helper = require('../helpers/helper');
 
 class UserController {
@@ -28,6 +28,10 @@ class UserController {
 
           res.status(200).json({
             token,
+            data: {
+              id: user.id,
+              name: user.name
+            },
             message: `Success login as ${user.role}`
           });
         } else {

@@ -1,4 +1,4 @@
-const { Teacher, Parent } = require('../models')
+const { Attendance } = require('../models')
 
 module.exports = {
   isAdmin(req, res, next) {
@@ -22,5 +22,25 @@ module.exports = {
         message: 'Only teacher can do this action'
       })
     }
+  },
+  isToday(req, res, next) {
+    Attendance.findOne({
+      where: { attendanceDate: new Date().toLocaleDateString() }
+    })
+      .then(data => {
+        if(data) {
+          req.headers.AttendanceId = data.id
+          next()
+        } else {
+          Attendance.create({
+            attendanceDate: new Date().toLocaleDateString()
+          })
+            .then(data => {
+              req.headers.AttendanceId = data.id
+              next()
+            })
+        }
+      })
+      .catch(next)
   }
 };

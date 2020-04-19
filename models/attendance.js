@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           args: true
         },
-        isAfter: {
-          args: `${new Date().toDateString()}`,
-          msg: 'Attendance date cannot pass from today'
-        }
+        // isAfter: {
+        //   args: `${new Date().toLocaleDateString()}`,
+        //   msg: 'Attendance date cannot pass from today'
+        // }
       }
     }
   }, {

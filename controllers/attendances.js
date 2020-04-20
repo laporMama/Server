@@ -1,4 +1,4 @@
-const { StudentAttendance, Student } = require('../models')
+const { StudentAttendance, Student, Class} = require('../models')
 // console.log(new Date().toLocaleDateString() === new Date('4/19/2020').toLocaleDateString())
 module.exports = {
   create(req, res, next) {
@@ -54,7 +54,7 @@ module.exports = {
     const { id } = req.decoded
     Student.findAll({
       where: { ParentId: id },
-      include: [StudentAttendance]
+      include: [{model:StudentAttendance},{model:Class}]
     })
       .then(data => {
         res.status(200).json({

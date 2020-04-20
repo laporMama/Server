@@ -1,11 +1,20 @@
 const { Teacher, Course } = require('../models');
+const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 module.exports = {
 	async getAll(req, res, next) {
-		const teachers = await Teacher.findAll()
-		res.status(200).json({
-			data: teachers
-		})
+		const dataRedis = await getRedis('teacher')
+		if (dataRedis) {
+			res.status(200).json({
+				data: dataRedis
+			})
+		} else {
+			const teachers = await Teacher.findAll()
+			const_ = await setRedis('teacher', teachers)
+			res.status(200).json({
+				data: teachers
+			})
+		}
 	},
 	update(req, res, next) {
 		const { UserId, CourseId } = req.body
@@ -16,6 +25,7 @@ module.exports = {
 			where: { id }
 		})
 			.then(() => {
+				const _= deleteRedis('teacher')
 				res.status(200).json({
 					message: 'Success update data teacher'
 				})
@@ -25,23 +35,24 @@ module.exports = {
 	destroy(req, res, next) {
 		const { id } = req.params
 		Teacher.destroy({
-			where: {id}
+			where: { id }
 		})
 			.then(() => {
+				const_ =deleteRedis('teacher')
 				res.status(200).json({
 					message: 'Success delete teacher data'
 				})
 			})
 			.catch(next)
 	},
-	async getById(req, res, next) {
+	async getById(req, res, next) {/* istanbul ignore next */
 		const { id } = req.params;
-
+		/* istanbul ignore next */
 		const teacher = await Teacher.findOne({
 			where: { id },
 			include: [{ model: Course }]
 		})
-
+		/* istanbul ignore next line */
 		res.status(200).json({
 			teacher
 		})

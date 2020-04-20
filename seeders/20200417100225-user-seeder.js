@@ -1,5 +1,5 @@
 'use strict';
-const { hashPassword } = require('../helpers/helper');
+const { hashPassword } = require('../helpers');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

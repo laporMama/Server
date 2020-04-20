@@ -1,5 +1,5 @@
 const { User } = require('../models')
-const { verify } = require('../helpers/helper.js')
+const { verify } = require('../helpers/index.js')
 
 module.exports = (req, res, next) => {
   let { token } = req.headers;
@@ -10,18 +10,18 @@ module.exports = (req, res, next) => {
       where: { id, email }
     })
       .then(data => {
-        if (data) {
+      /* istanbul ignore next */  if (data) {
           req.decoded = data;
           next();
         } else {
-          next({
+        /* istanbul ignore next line */  next({
             status: 401,
             message: 'Please Log in first'
           })
         }
       })
       .catch(next)
-  } catch (error) {
+  } catch (error) {/* istanbul ignore next line */
     next(error)
   }
 };

@@ -2,7 +2,7 @@ const request = require('supertest')
 const app = require('../app.js')
 const { User, Student, Report, Course, Class, Teacher, sequelize } = require('../models')
 const { queryInterface } = sequelize
-const { generateToken } = require('../helpers/helper.js')
+const { generateToken } = require('../helpers')
 let tokenTeacher = ''
 let tokenParent = ''
 let reportId = 0
@@ -184,13 +184,14 @@ describe('/reports section, only user who have role "teacher" can do this action
             score: 85,
             type: 'uas',
             CourseId: courseId,
-            StudentId: studentId
+            StudentId: studentId,
+            reportDate: null
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
             expect(body).toHaveProperty('message')
-            expect(body.message).toContain('Report date cannot be null')
+            expect(body.message).toContain('Report date cannot be empty')
             done()
           })
       })

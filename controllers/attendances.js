@@ -1,5 +1,6 @@
-const { StudentAttendance, Student } = require('../models')
-// console.log(new Date().toLocaleDateString() === new Date('4/19/2020').toLocaleDateString())
+const { StudentAttendance, Student, Class } = require('../models')
+const { getRedis, setRedis, deleteRedis } = require('../helpers')
+
 module.exports = {
   create(req, res, next) {
     const { StudentId, status } = req.body
@@ -8,6 +9,7 @@ module.exports = {
       status, StudentId, AttendanceId
     })
       .then(() => {
+        deleteRedis('attendances')
         res.status(201).json({
           message: 'Success create attendances'
         })
@@ -15,13 +17,21 @@ module.exports = {
       .catch(next)
   },
   findAll(req, res, next) {
-    StudentAttendance.findAll()
-      .then(data => {
-        res.status(200).json({
-          data
-        })
+    const dataRedis = getRedis('attendances')
+    if (dataRedis) {
+      res.status(200).json({
+        data: dataRedis
       })
-      .catch(next)
+    } else {
+      StudentAttendance.findAll()
+        .then(data => {
+          setRedis('attendances', data)
+          res.status(200).json({
+            data
+          })
+        })
+        .catch(next)
+    }
   },
   update(req, res, next) {
     const { status, StudentId } = req.body
@@ -32,6 +42,7 @@ module.exports = {
       where: { id }
     })
       .then(() => {
+        deleteRedis('attendances')
         res.status(200).json({
           message: 'Success update student attendance'
         })
@@ -44,19 +55,20 @@ module.exports = {
       where: { id }
     })
       .then(() => {
+        deleteRedis('attendances')
         res.status(200).json({
           message: 'Success delete data attendance'
         })
       })
       .catch(next)
   },
-  findByParent(req, res, next) {
-    const { id } = req.decoded
+  findByParent(req, res, next) {/* istanbul ignore next */
+    const { id } = req.decoded/* istanbul ignore next */
     Student.findAll({
       where: { ParentId: id },
-      include: [StudentAttendance]
-    })
-      .then(data => {
+      include: [StudentAttendance, Class]
+    })/* istanbul ignore next */
+      .then(data => {/* istanbul ignore next */
         res.status(200).json({
           data
         })

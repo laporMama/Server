@@ -1,5 +1,5 @@
 const { User, Teacher } = require('../models');
-const helper = require('../helpers/helper');
+const { comparePassword, generateToken } = require('../helpers');
 
 class UserController {
   static register(req, res, next) {
@@ -39,14 +39,14 @@ class UserController {
       if (user) {
         const dbPass = user.password;
 
-        if (helper.comparePassword(password, dbPass)) {
+        if (comparePassword(password, dbPass)) {
           const payload = {
             id: user.id,
             role: user.role,
             email
           };
 
-          const token = helper.generateToken(payload);
+          const token = generateToken(payload);
 
           res.status(200).json({
             token,

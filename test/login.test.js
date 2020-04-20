@@ -3,7 +3,7 @@ const app = require('../app.js')
 const { User, sequelize } = require('../models')
 const { queryInterface } = sequelize
 
-describe.skip('Login test section', () => {
+describe('Login test section', () => {
   beforeAll(done => {
     const teacher = {
       name: 'teacher',

@@ -9,6 +9,28 @@ const classes = require('./classes.js')
 const isLogin = require('../middlewares/authentication.js')
 const { isAdmin } = require('../middlewares/authorization.js')
 
+const { Student, StudentAttendance, Attendace } = require('../models')
+router.get('/test', async (req, res, next) => {
+	try {
+		const students = await Student.findAll({
+      where: { ParentId: id }
+    })
+
+    const attendance = await Promise.all(students.map(async student => {
+      const conj = await StudentAttendance.findOne({
+        where: { id: student.id },
+        include: {
+          model: Attendance,
+          where: { attendanceDate:  }
+        }
+      })
+		}))
+		res.send('test page');
+	} catch (error) {
+		res.send('test page error');
+	}
+})
+
 router.use('/', login)
 router.use(isLogin)
 router.use('/class', classes)

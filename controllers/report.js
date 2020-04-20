@@ -3,20 +3,22 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class ReportController {
   static async getAll(req, res, next) {
-    const dataRedis = getRedis('report')
-    if (dataRedis) {
-      res.status(200).json({
-        data: dataRedis
-      })
-    } else {
-      Report.findAll()
-        .then(data => {
-          setRedis('report', data)
+    try {
+      // const dataRedis = await getRedis('report')
+      // console.log(dataRedis)
+      // if (dataRedis) {
+      //   res.status(200).json({
+      //     data: dataRedis
+      //   })
+      // } else {
+        const data = await Report.findAll()
+          // const _ = await setRedis('report', data)
           res.status(200).json({
             data
           })
-        })
-        .catch(next)
+      // }
+    } catch (error) {
+      next(error)
     }
     // try {
     //   let result = null;
@@ -114,7 +116,7 @@ class ReportController {
         StudentId,
         CourseId
       });
-      deleteRedis('report')
+      const _ = await deleteRedis('report')
       res.status(201).json({
         message: 'Success create student report'
       });
@@ -137,7 +139,7 @@ class ReportController {
           message: 'Report data not found'
         }
       } else {
-        deleteRedis('report')
+        const _ = deleteRedis('report')
         res.status(200).json({
           message: 'Success update student report'
         })
@@ -159,7 +161,7 @@ class ReportController {
           message: 'Report data not found'
         }
       } else {
-        deleteRedis('report')
+        const_ =deleteRedis('report')
         res.status(200).json({
           message: 'Success delete student report'
         })

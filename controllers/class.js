@@ -4,14 +4,15 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 class ClassesController {
   static async getAll(req, res, next) {
     try {
-      const data = getRedis('class')
+      const data = await getRedis('class')
       if (data) {
+        console.log(data)
         res.status(200).json({
           data
         });
       } else {
         const classes = await Class.findAll();
-        setRedis('class', classes)
+        const _ = await setRedis('class', classes)
         res.status(200).json({
           data: classes
         });
@@ -25,7 +26,7 @@ class ClassesController {
     try {
       const { name } = req.body
       const created = await Class.create({ name })
-      deleteRedis('class')
+      const _ = deleteRedis('class')
       res.status(201).json({
         message: 'Success create class'
       })

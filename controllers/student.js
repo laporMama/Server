@@ -4,14 +4,14 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 class StudentController {
   static async getAll(req, res, next) {
     try {
-      const dataRedis = getRedis('student')
+      const dataRedis = await getRedis('student')
       if (dataRedis) {
         res.status(200).json({
           data: dataRedis
         })
       } else {
         const students = await Student.findAll();
-        setRedis('student', students)
+        const _= await setRedis('student', students)
         res.status(200).json({
           data: students
         })
@@ -69,7 +69,7 @@ class StudentController {
       const _ = await Student.destroy({
         where: { id }
       })
-      deleteRedis('student')
+      const _= deleteRedis('student')
       res.status(200).json({
         message: "Success delete data student"
       })
@@ -90,7 +90,7 @@ class StudentController {
           id
         }
       })
-      deleteRedis('student')
+      const _= deleteRedis('student')
       res.status(200).json({
         message: 'Success update data student'
       })

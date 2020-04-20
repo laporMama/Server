@@ -1,3 +1,4 @@
+
 const { StudentAttendance, Student, Class } = require('../models')
 const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
@@ -66,6 +67,7 @@ module.exports = {
     const { id } = req.decoded/* istanbul ignore next */
     Student.findAll({
       where: { ParentId: id },
+
       include: [StudentAttendance, Class]
     })/* istanbul ignore next */
       .then(data => {/* istanbul ignore next */

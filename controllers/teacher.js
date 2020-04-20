@@ -3,14 +3,14 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 module.exports = {
 	async getAll(req, res, next) {
-		const dataRedis = getRedis('teacher')
+		const dataRedis = await getRedis('teacher')
 		if (dataRedis) {
 			res.status(200).json({
 				data: dataRedis
 			})
 		} else {
 			const teachers = await Teacher.findAll()
-			setRedis('teacher', teachers)
+			const_ = await setRedis('teacher', teachers)
 			res.status(200).json({
 				data: teachers
 			})
@@ -25,7 +25,7 @@ module.exports = {
 			where: { id }
 		})
 			.then(() => {
-				deleteRedis('teacher')
+				const _= deleteRedis('teacher')
 				res.status(200).json({
 					message: 'Success update data teacher'
 				})
@@ -38,7 +38,7 @@ module.exports = {
 			where: { id }
 		})
 			.then(() => {
-				deleteRedis('teacher')
+				const_ =deleteRedis('teacher')
 				res.status(200).json({
 					message: 'Success delete teacher data'
 				})

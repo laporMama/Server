@@ -13,15 +13,15 @@ sendDailyAttendanceQueue.process(async (job) => {
       where: { ParentId: id }
     })
 
-    const attendance = await Promise.all(students.map(async student => {
-      const conj = await StudentAttendance.findOne({
-        where: { id: student.id },
-        include: {
-          model: Attendance,
-          where: { attendanceDate:  }
-        }
-      })
-    }))
+    // const attendance = await Promise.all(students.map(async student => {
+    //   const conj = await StudentAttendance.findOne({
+    //     where: { id: student.id },
+    //     include: {
+    //       model: Attendance,
+    //       where: { attendanceDate:  }
+    //     }
+    //   })
+    // }))
 
     sendMailer(
       name,

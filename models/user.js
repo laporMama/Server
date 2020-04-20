@@ -1,6 +1,6 @@
 'use strict';
 const { hashPassword } = require('../helpers/helper');
-const { queueDailyEmail, queueDailyEmail } = require('../helpers/queue');
+const { queueDailyEmail, queueWeeklyEmail } = require('../helpers/queue');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends sequelize.Sequelize.Model {}

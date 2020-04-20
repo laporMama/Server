@@ -21,7 +21,7 @@ router.get('/test', async (req, res, next) => {
         where: { id: student.id },
         include: {
           model: Attendance,
-          where: { attendanceDate:  }
+          where: { attendanceDate: new Date() }
         }
       })
 		}))

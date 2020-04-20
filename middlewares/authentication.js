@@ -11,6 +11,7 @@ module.exports = (req, res, next) => {
     })
       .then(data => {
         if (data) {
+          console.log(data, 'WOKDOWDKOWKDOKWODKO')
           req.decoded = data;
           next();
         } else {

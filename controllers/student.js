@@ -1,4 +1,4 @@
-const { Student } = require('../models/');
+const { Student, Report } = require('../models/');
 
 class StudentController {
   static async getAll(req, res, next) {
@@ -34,7 +34,8 @@ class StudentController {
       const { id } = req.params;
 
       const students = await Student.findAll({
-        where: { ClassId: id }
+        where: { ClassId: id },
+        include:[Report]
       })
 
       res.status(200).json({
@@ -47,10 +48,12 @@ class StudentController {
 
   static async getChildren(req, res, next) {
     try {
-      const { id: ParentId } = req.decoded
+      const { id } = req.decoded
+      console.log(id, 'OWKDAOKDOADKOKD')
 
       const student = await Student.findAll({
-        where: { ParentId }
+        where: { ParentId : id },
+        include:[Report]
       })
 
       res.status(200).json({

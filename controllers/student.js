@@ -1,4 +1,4 @@
-const { Student } = require('../models/');
+const { Student, Report } = require('../models/');
 const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class StudentController {
@@ -37,7 +37,8 @@ class StudentController {
     try {/* istanbul ignore next line */
       const { id } = req.params;
       const students = await Student.findAll({
-        where: { ClassId: id }
+        where: { ClassId: id },
+        include:[Report]
       })
       res.status(200).json({
         students
@@ -48,10 +49,11 @@ class StudentController {
   }
   static async getChildren(req, res, next) {/* istanbul ignore next line */
     try {/* istanbul ignore next line */
-      const { id: ParentId } = req.decoded
+      const { id } = req.decoded
 
       const student = await Student.findAll({
-        where: { ParentId }
+        where: { ParentId : id },
+        include:[Report]
       })
 
       res.status(200).json({

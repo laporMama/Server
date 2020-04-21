@@ -3,30 +3,26 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class ClassesController {
   static async getAll(req, res, next) {
-    try {
-      const data = await getRedis('class')
-      if (data) {
-        console.log(data)
-        res.status(200).json({
-          data
-        });
-      } else {
-        const classes = await Class.findAll();
-        const _ = await setRedis('class', classes)
-        res.status(200).json({
-          data: classes
-        });
-      }
-    } catch (error) {/* istanbul ignore next line */
-      next(error);
+    const dataRedis = getRedis('class')
+    if (dataRedis) {
+      res.status(200).json({
+        data: dataRedis
+      })
+    } else {
+      Class.findAll()
+        .then(data => {
+          setRedis('class', data)
+          res.status(200).json({
+            data
+          })
+        })
     }
   }
-
   static async create(req, res, next) {
     try {
       const { name } = req.body
       const created = await Class.create({ name })
-      const _ = deleteRedis('class')
+      const _ = await deleteRedis('class')
       res.status(201).json({
         message: 'Success create class'
       })
@@ -34,7 +30,6 @@ class ClassesController {
       next(error)
     }
   }
-
   static async update(req, res, next) {
     try {
       const { id } = req.params
@@ -42,7 +37,7 @@ class ClassesController {
       const updated = await Class.update({ name }, {
         where: { id }
       })
-      deleteRedis('class')
+      const _ = await deleteRedis('class')
       if (updated[0] === 0) {
         throw {
           status: 404,
@@ -57,14 +52,13 @@ class ClassesController {
       next(error)
     }
   }
-
   static async destroy(req, res, next) {
     try {
       const { id } = req.params
       const deleted = await Class.destroy({
         where: { id }
       })
-      deleteRedis('class')
+      const _ = await deleteRedis('class')
       if (deleted === 0) {
         throw {
           status: 404,

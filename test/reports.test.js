@@ -18,15 +18,12 @@ describe('/reports section, only user who have role "teacher" can do this action
       role: 'teacher',
       phoneNumber: '081234432180'
     }
-
     let parent = null
-
     Course.create({
       name: 'MTK'
     })
       .then(result => {
         courseId = result.id
-
         return User.create(teacher)
       })
       .then(result => {
@@ -35,7 +32,6 @@ describe('/reports section, only user who have role "teacher" can do this action
           email: result.email,
           role: result.role
         })
-
         return Teacher.create({
           UserId: result.id,
           CourseId: courseId
@@ -52,7 +48,6 @@ describe('/reports section, only user who have role "teacher" can do this action
       })
       .then(result => {
         parent = result
-
         tokenParent = generateToken({
           id: result.id,
           email: result.email,
@@ -69,12 +64,10 @@ describe('/reports section, only user who have role "teacher" can do this action
           ClassId: result.id,
           ParentId: parent.id
         }
-
         return Student.create(student)
       })
       .then(result => {
         studentId = result.id
-
         return Report.create({
           score: 99,
           reportDate: new Date(),
@@ -91,15 +84,28 @@ describe('/reports section, only user who have role "teacher" can do this action
         done(err)
       })
   })
-
   afterAll(done => {
     queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        return queryInterface.bulkDelete('Student', null, {})
+      })
+      .then(() => {
+        return queryInterface.bulkDelete('Report', null, {})
+      })
+      .then(() => {
+        return queryInterface.bulkDelete('Course', null, {})
+      })
+      .then(() => {
+        return queryInterface.bulkDelete('Class', null, {})
+      })
+      .then(() => {
+        return queryInterface.bulkDelete('Teacher', null, {})
+      })
       .then(() => {
         done()
       })
       .catch(done)
   })
-
   describe('Create reports section', () => {
     describe('Success response', () => {
       test('will returning status code 201 and message', done => {
@@ -154,7 +160,7 @@ describe('/reports section, only user who have role "teacher" can do this action
           .end((err, { status, body }) => {
             expect(err).toBeNull()
             expect(status).toBe(400)
-					  expect(body.message).toContain('StudentId cannot be null')
+            expect(body.message).toContain('StudentId cannot be null')
             done()
           })
       })
@@ -357,7 +363,6 @@ describe('/reports section, only user who have role "teacher" can do this action
       })
     })
   })
-
   describe('Get all reports section', () => {
     describe('Success response', () => {
       test('Will returning status code 200 and list reports', done => {
@@ -373,8 +378,6 @@ describe('/reports section, only user who have role "teacher" can do this action
       })
     })
   })
-
-
   describe('Update reports section', () => {
     describe('Success response', () => {
       test('will returning status code 200 and message', done => {
@@ -420,8 +423,6 @@ describe('/reports section, only user who have role "teacher" can do this action
       })
     })
   })
-
-
   describe('Delete reports section', () => {
     describe('Success response', () => {
       test('Will returning status code 200 and message', done => {

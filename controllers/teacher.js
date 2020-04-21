@@ -2,18 +2,21 @@ const { Teacher, Course } = require('../models');
 const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 module.exports = {
-	async getAll(req, res, next) {
-		const dataRedis = await getRedis('teacher')
-		if (dataRedis) {
+	getAll(req, res, next) {
+		const dataRedis = getRedis('teacher')
+		if(dataRedis){
 			res.status(200).json({
 				data: dataRedis
 			})
-		} else {
-			const teachers = await Teacher.findAll()
-			const_ = await setRedis('teacher', teachers)
-			res.status(200).json({
-				data: teachers
-			})
+		}else{
+			Teacher.findAll()
+				.then(data => {
+					setRedis('teacher', data)
+					res.status(200).json({
+						data
+					})
+				})
+				.catch(next)
 		}
 	},
 	update(req, res, next) {
@@ -56,14 +59,5 @@ module.exports = {
 		res.status(200).json({
 			teacher
 		})
-	},
-	// setAttendance(req, res, next) {
-	// 	res.send('absensi siswa');
-	// },
-	// getStudentScore(req, res, next) {
-	// 	res.send('ini lihat nilai siswa');
-	// },
-	// setStudentScore(req, res, next) {
-	// 	res.send('ini post nilai siswa');
-	// },
+	}
 }

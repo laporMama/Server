@@ -66,6 +66,9 @@ describe('/students sections, only user who have role "admin" can do this action
   afterAll(done => {
     queryInterface.bulkDelete('Users', null, {})
       .then(() => {
+        return queryInterface.bulkDelete('Student', null, {})
+      })
+      .then(() => {
         done()
       })
       .catch(done)

@@ -3,4 +3,3 @@ coverage
 rest.http
 config/config.json
 config
-send.js

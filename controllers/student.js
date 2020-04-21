@@ -2,22 +2,21 @@ const { Student, Report } = require('../models/');
 const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class StudentController {
-  static async getAll(req, res, next) {
-    try {
-      const dataRedis = await getRedis('student')
-      if (dataRedis) {
-        res.status(200).json({
-          data: dataRedis
+  static getAll(req, res, next) {
+    const dataRedis = getRedis('student')
+    if(dataRedis){
+      res.status(200).json({
+        data: dataRedis
+      })
+    }else{
+      Student.findAll()
+        .then(data => {
+          setRedis('student', data)
+          res.status(200).json({
+            data
+          })
         })
-      } else {
-        const students = await Student.findAll();
-        const _= await setRedis('student', students)
-        res.status(200).json({
-          data: students
-        })
-      }
-    } catch (error) {/* istanbul ignore next line */
-      next(error)
+        .catch(next)
     }
   }
   static async getById(req, res, next) {/* istanbul ignore next line */
@@ -66,14 +65,14 @@ class StudentController {
   static async deleteId(req, res, next) {
     try {
       const { id } = req.params
-      const _ = await Student.destroy({
+      const student = await Student.destroy({
         where: { id }
       })
-      const __= await deleteRedis('student')
+      const _ = await deleteRedis('student')
       res.status(200).json({
         message: "Success delete data student"
       })
-    } catch (error) {/* istanbul ignore next line */
+    } catch (error) {
       next(error)
     }
   }
@@ -90,7 +89,7 @@ class StudentController {
           id
         }
       })
-      const _= deleteRedis('student')
+      const _ = await deleteRedis('student')
       res.status(200).json({
         message: 'Success update data student'
       })

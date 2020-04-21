@@ -2,6 +2,7 @@ const Bull = require('bull');
 const moment = require('moment');
 const { Op } = require('sequelize');
 const transporter = require('../helpers/nodemailer');
+const nexmo = require('./nexmo');
 
 //#region send mail
 const queueSendMail = new Bull('queue-send-mail');
@@ -32,6 +33,50 @@ function addToQueueSendMail (body) {
 }
 //#endregion
 
+//#region send SMS
+const queueSendSMS = new Bull('queue-send-sms');
+
+queueSendSMS.on('completed', (job, result) => {
+  console.log('sending SMS complete');
+})
+
+queueSendSMS.on('failed', (job, result) => {
+  console.log('sending SMS failed', result);
+})
+
+queueSendSMS.process(async (job) => {
+  try {
+    const { from, to, text } = job.data.payload
+
+    nexmo.sendSms(from, to, text, (err, responseData) => {
+      if (err) {
+        console.log('masi di proses dan success', err);
+        throw err
+      }
+
+      if (responseData.messages[0]['status'] !== "0") {
+        console.log(`masi di proses dan fail`);
+        console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
+
+        throw `Message failed with error: ${responseData.messages[0]['error-text']}`
+      }
+      
+      console.log("masi di proses dan success, Message sent successfully.");
+      return { response: 'Message sent successfully' }
+    })
+  } catch (error) {
+    return Promise.reject({ error })
+  }
+})
+
+function addToQueueSendSMS (payload) {
+  queueSendSMS.add(payload, {
+    attemps: 4,
+    backoff: 60 * 60 * 1000
+  })
+}
+//#endregion
+
 //#region Daily Cron
 const cronQueueDaily = new Bull('cron-daily')
 
@@ -40,7 +85,7 @@ function addDailyCron () {
   cronQueueDaily.add({}, {
     repeat: {
       // cron: '0 8 * * 1-5', // setiap hari senin - jumat setiap jam 8 pagi
-      cron: '*/1 * * * *' // setiap 1 menit
+      cron: '*/15 * * * * *' // setiap 1 menit
     }
   })
 }
@@ -69,10 +114,10 @@ cronQueueDaily.process(async (job) => {
       const { Students: students } = parent
       
       students.forEach(student => {
-        // to: `${parent.name} <${parent.email}>`, // email dari database
         const body = {
           from: '"Lapor Mama" <lapormama@gmail.com>',
           to: 'ryanmaulanaputra@gmail.com',
+          // to: `${parent.name} <${parent.email}>`, // email dari database
           subject: 'Daily Attendance Notification',
           html: `<h3>Hi ${parent.name}</h3>
           <p>We would like to notify that our student, ${student.name}, already attend the class today</p>
@@ -81,6 +126,16 @@ cronQueueDaily.process(async (job) => {
 
         console.log(`sending mail of ${student.name}`);
         addToQueueSendMail({ body })
+
+        const payload = {
+          from: 'Lapor Mama',
+          to: '+6281219593553',
+          // to: parent.phoneNumber, // phone number dari database
+          text: `Hi ${parent.name}, We would like to notify that our student, ${student.name}, already attend the class today. Thank you, Lapor Mama`
+        }
+
+        console.log(`sending SMS of ${student.name}`);
+        addToQueueSendSMS({ payload })
       })
     })
 
@@ -143,10 +198,10 @@ cronQueueWeekly.process(async (job) => {
       const { Students: students } = parent
         console.log(`loop parent`);
         students.forEach(student => {
-          // to: `${parent.name} <${parent.email}>`, // email dari database
           const body = {
             from: '"Lapor Mama" <lapormama@gmail.com>',
             to: 'ryanmaulanaputra@gmail.com',
+            // to: `${parent.name} <${parent.email}>`, // email dari database
             subject: 'Daily Attendance Notification',
             html: `
             <h3>Hi ${parent.name}</h3>
@@ -212,7 +267,5 @@ cronQueueWeekly.on('failed', (job, result) => {
   console.log('queueing cron failed', result.error);
 })
 //#endregion
-
-
 
 module.exports = { addDailyCron, addWeeklyCron }

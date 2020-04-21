@@ -4,7 +4,7 @@
 	require('dotenv').config({ path: process.cwd() + '/.env' });
 }
 
-const { addDailyCron, addWeeklyCron } = require('../helpers/queue');
+const { addDailyCron, addWeeklyCron } = require('./helpers/queue');
 // addDailyCron();
 // addWeeklyCron();
 

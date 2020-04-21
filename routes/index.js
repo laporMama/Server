@@ -10,18 +10,6 @@ const course = require('./course')
 const isLogin = require('../middlewares/authentication.js')
 const { isAdmin } = require('../middlewares/authorization.js')
 
-
-const { addDailyCron, addWeeklyCron } = require('../helpers/queue');
-const { User, Student, StudentAttendance, Attendance } = require('../models/index');
-const { Op } = require('sequelize');
-const moment = require('moment');
-// const addDailyEmailToQueue = require('../helpers/dailyEmail');
-router.get('/test', async (req, res, next) => {
-
-
-  res.send('add')
-})
-
 router.use('/', login)
 router.use(isLogin)
 router.use('/course', course)

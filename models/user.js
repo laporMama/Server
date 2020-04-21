@@ -79,9 +79,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       afterCreate: (user, opts) => {
         if (user.role === 'parent') {
-          queueDailyEmail(user.id);
+          queueDailyEmail(user);
   
-          queueWeeklyEmail(user.id);
+          queueWeeklyEmail(user);
         }
       }
     }

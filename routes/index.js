@@ -9,26 +9,16 @@ const classes = require('./classes.js')
 const isLogin = require('../middlewares/authentication.js')
 const { isAdmin } = require('../middlewares/authorization.js')
 
-const { Student, StudentAttendance, Attendace } = require('../models')
-router.get('/test', async (req, res, next) => {
-	try {
-		const students = await Student.findAll({
-      where: { ParentId: id }
-    })
 
-    const attendance = await Promise.all(students.map(async student => {
-      const conj = await StudentAttendance.findOne({
-        where: { id: student.id },
-        include: {
-          model: Attendance,
-          where: { attendanceDate: new Date() }
-        }
-      })
-		}))
-		res.send('test page');
-	} catch (error) {
-		res.send('test page error');
-	}
+const { addDailyCron, addWeeklyCron } = require('../helpers/queue');
+const { User, Student, StudentAttendance, Attendance } = require('../models/index');
+const { Op } = require('sequelize');
+const moment = require('moment');
+// const addDailyEmailToQueue = require('../helpers/dailyEmail');
+router.get('/test', async (req, res, next) => {
+
+
+  res.send('add')
 })
 
 router.use('/', login)

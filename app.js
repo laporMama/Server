@@ -7,6 +7,10 @@ if (env === 'development') {
 	require('dotenv').config({ path: process.cwd() + '/.env' }); // biar satu env aja ^^
 }
 
+const { addDailyCron, addWeeklyCron } = require('../helpers/queue');
+// addDailyCron();
+// addWeeklyCron();
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');

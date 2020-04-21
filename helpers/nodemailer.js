@@ -13,19 +13,4 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-const sendMail = (parentName, parentEmail, subject, html, callback) => {
-	const body = {
-		from: 'Lapor Mama <lapormama@gmail.com>',
-		to: `${parentName} <${parentEmail}>`,
-		subject,
-		html
-	}
-
-	transporter.sendMail(body, (error, info) => {
-		if (error) callback(error, null);
-		else callback(null, info);
-	})
-}
-
-
-module.exports = sendMail
+module.exports = transporter

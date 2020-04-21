@@ -7,7 +7,7 @@ class CourseController {
       res.status(200).json({
         data
       });
-    } catch (error) {
+    } catch (error) {/* istanbul ignore next */
       next(error);
     }
   }

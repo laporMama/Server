@@ -4,7 +4,6 @@ const { comparePassword, generateToken } = require('../helpers');
 class UserController {
   static register(req, res, next) {
     const { name, email, password, role, phoneNumber, CourseId } = req.body
-
     User.create({
       name, email, password, role, phoneNumber
     })
@@ -27,27 +26,21 @@ class UserController {
       })
       .catch(next)
   }
-
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
-
       const user = await User.findOne({
         where: { email: email }
       })
-
       if (user) {
         const dbPass = user.password;
-
         if (comparePassword(password, dbPass)) {
           const payload = {
             id: user.id,
             role: user.role,
             email
           };
-
           const token = generateToken(payload);
-
           res.status(200).json({
             token,
             data: {
@@ -71,7 +64,6 @@ class UserController {
     } catch (error) {
       next(error)
     }
-
   }
 }
 

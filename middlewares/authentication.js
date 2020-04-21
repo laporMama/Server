@@ -15,9 +15,9 @@ module.exports = (req, res, next) => {
           next();
         } else {
         /* istanbul ignore next line */  next({
-            status: 401,
-            message: 'Please Log in first'
-          })
+          status: 401,
+          message: 'Please Log in first'
+        })
         }
 
         return null

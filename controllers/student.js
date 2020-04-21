@@ -69,7 +69,7 @@ class StudentController {
       const _ = await Student.destroy({
         where: { id }
       })
-      const _= deleteRedis('student')
+      const __= await deleteRedis('student')
       res.status(200).json({
         message: "Success delete data student"
       })

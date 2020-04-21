@@ -4,34 +4,40 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 module.exports = {
   create(req, res, next) {
-    const { StudentId, status } = req.body
+    const { data } = req.body
     const { AttendanceId } = req.headers
-    StudentAttendance.create({
-      status, StudentId, AttendanceId
+    let promiseAll = []
+    data.forEach(el => {
+      promiseAll.push(StudentAttendance.create({
+        status: el.type, StudentId: el.id, AttendanceId
+      }))
+      Promise.all(promiseAll)
+      .then(data => {
+        res.status(200).json({
+          message: 'Attendance Success'
+        })
+      })
+      .catch(err => {
+        next(err)
+      })
     })
-      .then(() => {
-        deleteRedis('attendances')
-        res.status(201).json({
-          message: 'Success create attendances'
-        })
-      })
-      .catch(next)
   },
-  findAll(req, res, next) {
-    const dataRedis = getRedis('attendances')
-    if (dataRedis) {
-      res.status(200).json({
-        data: dataRedis
-      })
-    } else {
-      StudentAttendance.findAll()
-        .then(data => {
-          setRedis('attendances', data)
-          res.status(200).json({
-            data
-          })
+  async findAll (req, res, next) {
+    try {
+      const dataRedis = await getRedis('attendances')
+      if (dataRedis) {
+        res.status(200).json({
+          data: dataRedis
         })
-        .catch(next)
+      } else {
+        const data = await StudentAttendance.findAll()
+        const _ = await setRedis('attendances', data)
+        res.status(200).json({
+          data
+        })
+      }
+    } catch (error) {
+      next(error)
     }
   },
   update(req, res, next) {

@@ -1,26 +1,30 @@
-const { Student } = require('../models/');
+const { Student, Report } = require('../models/');
+const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class StudentController {
-  static async getAll(req, res, next) {
-    try {
-      const students = await Student.findAll();
-
+  static getAll(req, res, next) {
+    const dataRedis = getRedis('student')
+    if(dataRedis){
       res.status(200).json({
-        data: students
+        data: dataRedis
       })
-    } catch (error) {
-      next(error)
+    }else{
+      Student.findAll()
+        .then(data => {
+          setRedis('student', data)
+          res.status(200).json({
+            data
+          })
+        })
+        .catch(next)
     }
   }
-
-  static async getById(req, res, next) {
-    try {
+  static async getById(req, res, next) {/* istanbul ignore next line */
+    try {/* istanbul ignore next line */
       const { id } = req.params
-
       const student = await Student.findOne({
         where: { id }
       })
-
       res.status(200).json({
         student
       })
@@ -28,15 +32,13 @@ class StudentController {
       next(error)
     }
   }
-
-  static async getByClassId(req, res, next) {
-    try {
+  static async getByClassId(req, res, next) {/* istanbul ignore next line */
+    try {/* istanbul ignore next line */
       const { id } = req.params;
-
       const students = await Student.findAll({
-        where: { ClassId: id }
+        where: { ClassId: id },
+        include:[Report]
       })
-
       res.status(200).json({
         students
       })
@@ -44,13 +46,13 @@ class StudentController {
       next(error)
     }
   }
-
-  static async getChildren(req, res, next) {
-    try {
-      const { id: ParentId } = req.decoded
+  static async getChildren(req, res, next) {/* istanbul ignore next line */
+    try {/* istanbul ignore next line */
+      const { id } = req.decoded
 
       const student = await Student.findAll({
-        where: { ParentId }
+        where: { ParentId : id },
+        include:[Report]
       })
 
       res.status(200).json({
@@ -60,13 +62,13 @@ class StudentController {
       next(error)
     }
   }
-
   static async deleteId(req, res, next) {
     try {
       const { id } = req.params
-      const _ = await Student.destroy({
+      const student = await Student.destroy({
         where: { id }
       })
+      const _ = await deleteRedis('student')
       res.status(200).json({
         message: "Success delete data student"
       })
@@ -74,7 +76,6 @@ class StudentController {
       next(error)
     }
   }
-
   static async updateId(req, res, next) {
     try {
       const { name, ClassId, ParentId } = req.body
@@ -88,7 +89,7 @@ class StudentController {
           id
         }
       })
-
+      const _ = await deleteRedis('student')
       res.status(200).json({
         message: 'Success update data student'
       })
@@ -103,6 +104,7 @@ class StudentController {
       name, ClassId, ParentId
     })
       .then(() => {
+        deleteRedis('student')
         res.status(201).json({
           message: `Success create ${name} as student`
         })

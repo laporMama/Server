@@ -2,7 +2,7 @@ const request = require('supertest')
 const app = require('../app.js')
 const { User, Student, sequelize } = require('../models')
 const { queryInterface } = sequelize
-const { generateToken } = require('../helpers/helper.js')
+const { generateToken } = require('../helpers')
 let token = ''
 let tokent = ''
 let id = 0
@@ -65,6 +65,9 @@ describe('/students sections, only user who have role "admin" can do this action
   })
   afterAll(done => {
     queryInterface.bulkDelete('Users', null, {})
+      .then(() => {
+        return queryInterface.bulkDelete('Student', null, {})
+      })
       .then(() => {
         done()
       })

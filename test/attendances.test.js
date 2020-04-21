@@ -2,7 +2,7 @@ const request = require('supertest')
 const app = require('../app.js')
 const { User, Student, StudentAttendance, Attendance, sequelize } = require('../models')
 const { queryInterface } = sequelize
-const { generateToken } = require('../helpers/helper.js')
+const { generateToken } = require('../helpers')
 let token = ''
 let tokent = ''
 let id = 0
@@ -76,6 +76,15 @@ describe('/attendances sections, only user who have role "teacher" can do this a
   afterAll(done => {
     queryInterface.bulkDelete('Users', null, {})
       .then(() => {
+        return queryInterface.bulkDelete('Student', null, {})
+      })
+      .then(() => {
+        return queryInterface.bulkDelete('StudentAttendance', null, {})
+      })
+      .then(() => {
+        return queryInterface.bulkDelete('Attendance', null, {})
+      })
+      .then(() => {
         done()
       })
       .catch(done)
@@ -87,8 +96,10 @@ describe('/attendances sections, only user who have role "teacher" can do this a
           .post('/attendances')
           .set('token', token)
           .send({
-            StudentId,
-            status: 'hadir'
+            data: [{
+              StudentId,
+              status: 'hadir'
+            }]
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -119,8 +130,10 @@ describe('/attendances sections, only user who have role "teacher" can do this a
           .post('/attendances')
           .set('token', token)
           .send({
-            StudentId: null,
-            status: 'hadir'
+            data: [{
+              StudentId: null,
+              status: 'hadir'
+            }]
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()
@@ -134,8 +147,10 @@ describe('/attendances sections, only user who have role "teacher" can do this a
           .post('/attendances')
           .set('token', token)
           .send({
-            StudentId,
-            status: ''
+            data: [{
+              StudentId,
+              status: ''
+            }]
           })
           .end((err, { status, body }) => {
             expect(err).toBeNull()

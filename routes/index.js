@@ -6,6 +6,7 @@ const reports = require('./reports.js')
 const students = require('./students.js')
 const teachers = require('./teachers.js')
 const classes = require('./classes.js')
+const course = require('./course')
 const isLogin = require('../middlewares/authentication.js')
 const { isAdmin } = require('../middlewares/authorization.js')
 
@@ -23,6 +24,7 @@ router.get('/test', async (req, res, next) => {
 
 router.use('/', login)
 router.use(isLogin)
+router.use('/course', course)
 router.use('/class', classes)
 router.use('/reports', reports)
 router.use('/attendances', attendances)

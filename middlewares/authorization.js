@@ -27,12 +27,12 @@ module.exports = {
     Attendance.findOne({
       where: { attendanceDate: new Date().toLocaleDateString() }
     })
-      .then(data => {
+      .then(data => {/* istanbul ignore next */
         if(data) {
           req.headers.AttendanceId = data.id
           next()
         } else {
-          Attendance.create({
+        /* istanbul ignore next line */  Attendance.create({
             attendanceDate: new Date().toLocaleDateString()
           })
             .then(data => {

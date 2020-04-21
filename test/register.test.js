@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require('../app.js')
 const { User, sequelize } = require('../models')
-const { generateToken } = require('../helpers/helper.js')
+const { generateToken } = require('../helpers')
 const { queryInterface } = sequelize
 let token = ''
 let tokent = ''

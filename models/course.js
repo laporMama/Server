@@ -8,7 +8,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          args: true
+          args: true,
+          msg: 'Course name cannot be empty'
+        },
+        len: {
+          args: [1],
+          msg: 'Course name cannot be empty'
         }
       }
     }

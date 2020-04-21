@@ -1,32 +1,55 @@
 const { Course } = require('../models');
 
 class CourseController {
-  static async getAll (req, res, next) {
+  static async getAll(req, res, next) {
     try {
-      const courses = await Course.findAll();
-  
+      const data = await Course.findAll();
       res.status(200).json({
-        courses
+        data
       });
     } catch (error) {
       next(error);
     }
   }
-
-  static async getById (req, res, next) {
+  static async create(req, res, next) {
     try {
-      const { id } = req.params;
-  
-      const courses = await Course.findOne({
-        where: { id }
-      });
-  
-      res.status(200).json({
-        courses
-      });
+      const { name } = req.body
+      const course = await Course.create({
+        name
+      })
+      res.status(201).json({
+        message: 'Success create course'
+      })
     } catch (error) {
       next(error)
     }
+  }
+  static update(req, res, next) {
+    const { id } = req.params
+    const { name } = req.body
+    Course.update({
+      name
+    }, {
+      where: { id }
+    })
+      .then(() => {
+        res.status(200).json({
+          message: 'Success update course'
+        })
+      })
+      .catch(next)
+  }
+  static destroy(req, res, next) {
+    const { id } = req.params
+    Course.destroy({
+      where: { id }
+    })
+      .then(() => {
+        res.status(200).json({
+          message: 'Success delete course'
+        })
+      })
+      .catch(next)
   }
 }
 

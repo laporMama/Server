@@ -20,12 +20,12 @@ module.exports = {
       .catch(next)
   },
   findAll(req, res, next) {
-    const dataRedis = getRedis('attendances')
-    if(dataRedis){
+    const dataRedis = getRedis('attendances')/* istanbul ignore next line */
+    if (dataRedis) {
       res.status(200).json({
         data: dataRedis
       })
-    } else {
+    }/* istanbul ignore next */ else {
       StudentAttendance.findAll()
         .then(data => {
           setRedis('attendances', data)
@@ -63,15 +63,15 @@ module.exports = {
         })
       })
       .catch(next)
-  },
-  findByParent(req, res, next) {/* istanbul ignore next */
-    const { id } = req.decoded/* istanbul ignore next */
+  },/* istanbul ignore next */
+  findByParent(req, res, next) {
+    const { id } = req.decoded
     Student.findAll({
       where: { ParentId: id },
 
       include: [StudentAttendance, Class]
-    })/* istanbul ignore next */
-      .then(data => {/* istanbul ignore next */
+    })
+      .then(data => {
         res.status(200).json({
           data
         })

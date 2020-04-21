@@ -20,21 +20,21 @@ module.exports = {
     try {
       const data = await redis.get(name)
       return JSON.parse(data)
-    } catch (error) {
+    } catch (error) { /* istanbul ignore next line */
       next(error)
     }
   },
   async setRedis(name, payload) {
     try {
       await redis.set(name, JSON.stringify(payload))
-    } catch (error) {
+    } catch (error) { /* istanbul ignore next line */
       next(error)
     }
   },
   async deleteRedis(name) {
     try {
       await redis.del(name)
-    } catch (error) {
+    } catch (error) { /* istanbul ignore next line */
       next(error)
     }
   }

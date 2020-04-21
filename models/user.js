@@ -76,13 +76,6 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {
       beforeCreate: (user, opts) => {
         user.password = hashPassword(user.password);
-      },
-      afterCreate: (user, opts) => {
-        if (user.role === 'parent') {
-          queueDailyEmail(user);
-  
-          queueWeeklyEmail(user);
-        }
       }
     }
   });

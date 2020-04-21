@@ -3,12 +3,12 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class StudentController {
   static getAll(req, res, next) {
-    const dataRedis = getRedis('student')
-    if(dataRedis){
+    const dataRedis = getRedis('student')/* istanbul ignore next line */
+    if (dataRedis) {
       res.status(200).json({
         data: dataRedis
       })
-    }else{
+    } else {/* istanbul ignore next */
       Student.findAll()
         .then(data => {
           setRedis('student', data)
@@ -19,8 +19,8 @@ class StudentController {
         .catch(next)
     }
   }
-  static async getById(req, res, next) {/* istanbul ignore next line */
-    try {/* istanbul ignore next line */
+  /* istanbul ignore next */static async getById(req, res, next) {
+    try {
       const { id } = req.params
       const student = await Student.findOne({
         where: { id }
@@ -32,12 +32,12 @@ class StudentController {
       next(error)
     }
   }
-  static async getByClassId(req, res, next) {/* istanbul ignore next line */
-    try {/* istanbul ignore next line */
+  /* istanbul ignore next */static async getByClassId(req, res, next) {
+    try {
       const { id } = req.params;
       const students = await Student.findAll({
         where: { ClassId: id },
-        include:[Report]
+        include: [Report]
       })
       res.status(200).json({
         students
@@ -46,13 +46,13 @@ class StudentController {
       next(error)
     }
   }
-  static async getChildren(req, res, next) {/* istanbul ignore next line */
-    try {/* istanbul ignore next line */
+  /* istanbul ignore next */static async getChildren(req, res, next) {
+    try {
       const { id } = req.decoded
 
       const student = await Student.findAll({
-        where: { ParentId : id },
-        include:[Report]
+        where: { ParentId: id },
+        include: [Report]
       })
 
       res.status(200).json({
@@ -72,7 +72,7 @@ class StudentController {
       res.status(200).json({
         message: "Success delete data student"
       })
-    } catch (error) {
+    } catch (error) {/* istanbul ignore next */
       next(error)
     }
   }

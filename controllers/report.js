@@ -3,12 +3,12 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class ReportController {
   static async getAll(req, res, next) {
-    const dataRedis = await getRedis('report')
-    if(dataRedis){
+    const dataRedis = await getRedis('report')/* istanbul ignore next */
+    if (dataRedis) {
       res.status(200).json({
         data: dataRedis
       })
-    }else{
+    } else {
       Report.findAll()
         .then(data => {
           setRedis('report', data)
@@ -92,7 +92,7 @@ class ReportController {
     } catch (error) {
       next(error)
     }
-  }
+  }/* istanbul ignore next */
   static findByParent(req, res, next) {
     const { id } = req.decoded
     Student.findAll({

@@ -28,13 +28,13 @@ module.exports = {
       where: { attendanceDate: new Date().toLocaleDateString() }
     })
       .then(data => {/* istanbul ignore next */
-        if(data) {
+        if (data) {
           req.headers.AttendanceId = data.id
           next()
         } else {
         /* istanbul ignore next line */  Attendance.create({
-            attendanceDate: new Date().toLocaleDateString()
-          })
+          attendanceDate: new Date().toLocaleDateString()
+        })
             .then(data => {
               req.headers.AttendanceId = data.id
               next()

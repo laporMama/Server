@@ -4,7 +4,7 @@ const { isAdmin } = require('../middlewares/authorization.js')
 
 router.get('/', getAll)
 router.get('/parent', getChildren)
-router.get('/:id',getByClassId)
+router.get('/:id', getByClassId)
 router.use(isAdmin)
 router.post('/', create)
 router.put('/:id', updateId)

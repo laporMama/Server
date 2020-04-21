@@ -3,7 +3,7 @@ module.exports = (err, req, res, next) => {
   let message = 'Internal Server Error'
 
   // console.log(err, '<<<<<===!!!ERROR!!!===>>>>>')
-  
+
   if (err.status) {
     status = err.status
     message = err.message
@@ -16,7 +16,7 @@ module.exports = (err, req, res, next) => {
     status = 400
     message = 'Email already in use'
   } /* istanbul ignore next */else if (err.name === 'JsonWebTokenError') {
-    status = 401 
+    status = 401
     message = 'please login first!'
   }
 

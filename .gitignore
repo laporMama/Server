@@ -3,3 +3,4 @@ coverage
 rest.http
 config/config.json
 config
+dump.rdb

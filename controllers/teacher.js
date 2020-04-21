@@ -3,12 +3,12 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 module.exports = {
 	getAll(req, res, next) {
-		const dataRedis = getRedis('teacher')
-		if(dataRedis){
+		const dataRedis = getRedis('teacher')/* istanbul ignore next line */
+		if (dataRedis) {
 			res.status(200).json({
 				data: dataRedis
 			})
-		}else{
+		}/* istanbul ignore next */else {
 			Teacher.findAll()
 				.then(data => {
 					setRedis('teacher', data)
@@ -28,7 +28,7 @@ module.exports = {
 			where: { id }
 		})
 			.then(() => {
-				const _= deleteRedis('teacher')
+				const _ = deleteRedis('teacher')
 				res.status(200).json({
 					message: 'Success update data teacher'
 				})
@@ -41,21 +41,19 @@ module.exports = {
 			where: { id }
 		})
 			.then(() => {
-				const_ =deleteRedis('teacher')
+				const_ = deleteRedis('teacher')
 				res.status(200).json({
 					message: 'Success delete teacher data'
 				})
 			})
 			.catch(next)
-	},
-	async getById(req, res, next) {/* istanbul ignore next */
+	},/* istanbul ignore next */
+	async getById(req, res, next) {
 		const { id } = req.params;
-		/* istanbul ignore next */
 		const teacher = await Teacher.findOne({
 			where: { id },
 			include: [{ model: Course }]
 		})
-		/* istanbul ignore next line */
 		res.status(200).json({
 			teacher
 		})

@@ -19,6 +19,8 @@ module.exports = (req, res, next) => {
           message: 'Please Log in first'
         })
         }
+
+        return null
       })
       .catch(next)
   } catch (error) {/* istanbul ignore next line */

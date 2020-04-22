@@ -3,7 +3,7 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class ClassesController {
   static async getAll(req, res, next) {
-    const dataRedis = getRedis('class')/* istanbul ignore next line */
+    const dataRedis = await getRedis('class')/* istanbul ignore next line */
     if (dataRedis) {
       res.status(200).json({
         data: dataRedis

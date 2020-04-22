@@ -43,7 +43,8 @@
   },
   "jest": {
     "coveragePathIgnorePatterns": [
-      "<rootDir>/helpers/queue.js"
+      "<rootDir>/helpers/queue.js",
+      "<rootDir>/routes/cronDemo.js"
     ]
   }
 }

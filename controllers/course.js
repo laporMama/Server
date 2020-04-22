@@ -1,12 +1,21 @@
 const { Course } = require('../models');
+const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 class CourseController {
   static async getAll(req, res, next) {
     try {
-      const data = await Course.findAll();
-      res.status(200).json({
-        data
-      });
+      const dataRedis = await getRedis('course')/* istanbul ignore next */
+      if (dataRedis) {
+        res.status(200).json({
+          data: dataRedis
+        });
+      } else {
+        const data = await Course.findAll();
+        const _ = await setRedis('course', data)
+        res.status(200).json({
+          data
+        });
+      }
     } catch (error) {/* istanbul ignore next */
       next(error);
     }
@@ -17,6 +26,7 @@ class CourseController {
       const course = await Course.create({
         name
       })
+      const _ = await deleteRedis('course')
       res.status(201).json({
         message: 'Success create course'
       })
@@ -33,6 +43,7 @@ class CourseController {
       where: { id }
     })
       .then(() => {
+        deleteRedis('course')
         res.status(200).json({
           message: 'Success update course'
         })
@@ -45,6 +56,7 @@ class CourseController {
       where: { id }
     })
       .then(() => {
+        deleteRedis('course')
         res.status(200).json({
           message: 'Success delete course'
         })

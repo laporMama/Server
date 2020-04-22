@@ -120,19 +120,6 @@ describe('/course section, only admin can do this action', () => {
           })
       })
     })
-    describe('Error response', () => {
-      test("Because user role isn't admin", done => {
-        request(app)
-          .get('/course')
-          .set('token', tokent)
-          .end((err, { status, body }) => {
-            expect(err).toBeNull()
-            expect(status).toBe(403)
-            expect(body.message).toBe('Only admin can do this action')
-            done()
-          })
-      })
-    })
   })
   describe('Update section', () => {
     describe('Success response', () => {

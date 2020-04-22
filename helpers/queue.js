@@ -84,8 +84,8 @@ function addDailyCron () {
   console.log(`adding cron to queue`);
   cronQueueDaily.add({}, {
     repeat: {
-      // cron: '0 8 * * 1-5', // setiap hari senin - jumat setiap jam 8 pagi
-      cron: '*/15 * * * * *' // setiap 1 menit
+      cron: '0 8 * * 1-5', // setiap hari senin - jumat setiap jam 8 pagi
+      // cron: '*/15 * * * * *' // setiap 1 menit
     }
   })
 }
@@ -114,18 +114,18 @@ cronQueueDaily.process(async (job) => {
       const { Students: students } = parent
       
       students.forEach(student => {
-        const body = {
-          from: '"Lapor Mama" <lapormama@gmail.com>',
-          to: 'ryanmaulanaputra@gmail.com',
-          // to: `${parent.name} <${parent.email}>`, // email dari database
-          subject: 'Daily Attendance Notification',
-          html: `<h3>Hi ${parent.name}</h3>
-          <p>We would like to notify that our student, ${student.name}, already attend the class today</p>
-          <p>Thank you,<br> Lapor Mama</p>`
-        }
+        // const body = {
+        //   from: '"Lapor Mama" <lapormama@gmail.com>',
+        //   to: 'ryanmaulanaputra@gmail.com',
+        //   // to: `${parent.name} <${parent.email}>`, // email dari database
+        //   subject: 'Daily Attendance Notification',
+        //   html: `<h3>Hi ${parent.name}</h3>
+        //   <p>We would like to notify that our student, ${student.name}, already attend the class today</p>
+        //   <p>Thank you,<br> Lapor Mama</p>`
+        // }
 
-        console.log(`sending mail of ${student.name}`);
-        addToQueueSendMail({ body })
+        // console.log(`sending mail of ${student.name}`);
+        // addToQueueSendMail({ body })
 
         const payload = {
           from: 'Lapor Mama',
@@ -163,8 +163,8 @@ function addWeeklyCron () {
 
   cronQueueWeekly.add({}, {
     repeat: {
-      // cron: '0 8 * * 1-5', // setiap hari senin - jumat setiap jam 8 pagi
-      cron: '*/30 * * * * *' // setiap 1 menit
+      cron: '0 8 * * 1-5', // setiap hari senin - jumat setiap jam 8 pagi
+      // cron: '*/30 * * * * *' // setiap 1 menit
     }
   })
 }
@@ -200,52 +200,78 @@ cronQueueWeekly.process(async (job) => {
         students.forEach(student => {
           const body = {
             from: '"Lapor Mama" <lapormama@gmail.com>',
-            to: 'ryanmaulanaputra@gmail.com',
-            // to: `${parent.name} <${parent.email}>`, // email dari database
-            subject: 'Daily Attendance Notification',
+            // to: 'ryanmaulanaputra@gmail.com',
+            to: `${parent.name} <${parent.email}>`, // email dari database
+            subject: 'Weekly Attendance Notification',
             html: `
-            <h3>Hi ${parent.name}</h3>
-            <p>We would like to notify you about our student, ${student.name}'s weekly attendance report:</p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>attendance</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${
-                  student.StudentAttendances.map(conj => `
+            <html>
+              <head>
+                <style>
+                  table {
+                    border-collapse: collapse;
+                  }
+                
+                  thead tr th {
+                    border: 1px solid black;
+                    padding: 10px;
+                  }
+                
+                  tbody tr:nth-child(1) {
+                    border-right: 0 !important;
+                    padding: 10px;
+                  }
+                
+                  tbody tr td {
+                    border: 1px solid black;
+                    padding: 10px;
+                  }
+                </style>
+              </head>
+            <body>
+              <h3>Hi ${parent.name}</h3>
+              <p>We would like to notify you about our student, ${student.name}'s weekly attendance report:</p>
+              <table>
+                <thead>
                   <tr>
-                    <td>${conj.Attendance.attendanceDate}</td>
-                    <td>${conj.status}</td>
+                    <th>Date</th>
+                    <th>Attendance</th>
                   </tr>
-                  `)
+                </thead>
+                <tbody>
+                  ${
+                    student.StudentAttendances.map(conj => `
+                    <tr>
+                      <td>${moment(conj.Attendance.attendanceDate).format('dddd, DD MM YYYY')}</td>
+                      <td>${conj.status}</td>
+                    </tr>
+                    `).join('')
+                  }
+                </tbody>
+              </table>
+              
+              <style>
+                table {
+                  border-collapse: collapse;
                 }
-              </tbody>
-            </table>
-            
-            <style>
-              table {
-                border-collapse: collapse;
-              }
-            
-              thead tr th {
-                border: 1px solid black;
-                padding: 10px;
-              }
-            
-              tbody tr:nth-child(1) {
-                border-right: 0 !important;
-                padding: 10px;
-              }
-            
-              tbody tr td {
-                border: 1px solid black;
-                padding: 10px;
-              }
-            </style>
-            <p>Thank you,<br> Lapor Mama</p>`
+              
+                thead tr th {
+                  border: 1px solid black;
+                  padding: 10px;
+                }
+              
+                tbody tr:nth-child(1) {
+                  border-right: 0 !important;
+                  padding: 10px;
+                }
+              
+                tbody tr td {
+                  border: 1px solid black;
+                  padding: 10px;
+                }
+              </style>
+              <p>Thank you,<br> Lapor Mama</p>
+            </body>
+          </html>`
           }
   
           console.log(`sending mail of ${student.name}`);

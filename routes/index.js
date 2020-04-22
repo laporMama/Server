@@ -8,9 +8,11 @@ const teachers = require('./teachers.js')
 const classes = require('./classes.js')
 const course = require('./course')
 const parent = require('./parent.js')
+const demo = require('./cronDemo');
 const isLogin = require('../middlewares/authentication.js')
 const { isAdmin } = require('../middlewares/authorization.js')
 
+router.use('/demo', demo)
 router.use('/', login)
 router.use(isLogin)
 router.use('/parent', parent)

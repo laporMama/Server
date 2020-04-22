@@ -3,6 +3,7 @@ const { getRedis, setRedis, deleteRedis } = require('../helpers')
 
 module.exports = {
   create(req, res, next) {
+    console.log(`masuk controller`);
     const { data } = req.body
     const { AttendanceId } = req.headers
     let promiseAll = []

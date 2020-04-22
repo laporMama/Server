@@ -36,7 +36,7 @@ class ReportController {
       }
       const report = await Report.create({
         score: Number(score),
-        reportDate: new Date(reportDate).toLocaleString(),
+        reportDate: new Date(reportDate).toLocaleDateString(),
         type,
         StudentId,
         CourseId

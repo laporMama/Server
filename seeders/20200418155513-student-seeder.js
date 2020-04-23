@@ -35,7 +35,7 @@ module.exports = {
         updatedAt: new Date()
       }, {
         name: 'Sofyan Setiawan',
-        ParentId: 5,
+        ParentId: 3,
         ClassId: 3,
         createdAt: new Date(),
         updatedAt: new Date()

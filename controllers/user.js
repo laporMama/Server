@@ -45,7 +45,8 @@ class UserController {
             token,
             data: {
               id: user.id,
-              name: user.name
+              name: user.name,
+              role: user.role
             },
             message: `Success login as ${user.role}`
           });

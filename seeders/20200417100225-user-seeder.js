@@ -3,49 +3,50 @@ const { hashPassword } = require('../helpers');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Users', [{
-      name: 'teacher1',
-      email: 'teacher@mail.com',
+    return queryInterface.bulkInsert('Users', [
+      {
+      name: 'Hary Dhimas Prakoso',
+      email: 'harydhimas@gmail.com',
       password: hashPassword('qweqwe'),
       role: 'teacher',
       phoneNumber: '081234432180',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      name: 'teacher2',
-      email: 'teacher2@mail.com',
+      name: 'Adiel Pratama',
+      email: 'adiel@gmail.com',
       password: hashPassword('qweqwe'),
       role: 'teacher',
       phoneNumber: '081234432180',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      name: 'parent1',
-      email: 'parent1@mail.com',
+      name: 'Khalishah Ulfah',
+      email: 'caca@gmail.com',
       password: hashPassword('qweqwe'),
       role: 'parent',
       phoneNumber: '081234432180',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      name: 'parent2',
-      email: 'parent2@mail.com',
+      name: 'Irsyah Mardiah',
+      email: 'icha@gmail.com',
       password: hashPassword('qweqwe'),
       role: 'parent',
       phoneNumber: '081234432180',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      name: 'parent3',
-      email: 'parent3@mail.com',
+      name: 'Tamara Zulaika Utama',
+      email: 'tamaro@gmail.com',
       password: hashPassword('qweqwe'),
       role: 'parent',
       phoneNumber: '081234432180',
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      name: 'admin',
-      email: 'admin@mail.com',
+      name: 'Admin Lapor Mama',
+      email: 'admin@lapormama.com',
       password: hashPassword('qweqwe'),
       role: 'admin',
       phoneNumber: '081234432180',
